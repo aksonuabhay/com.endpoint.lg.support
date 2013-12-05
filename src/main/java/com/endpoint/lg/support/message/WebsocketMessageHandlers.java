@@ -28,28 +28,20 @@ import java.util.Map;
  * <p>
  * An example using anonymous classes would be
  *
- * <pre><code>
+ * <pre>
+ * <code>
  * handlers.registerHandler("viewSync", new WebsocketMessageHandler() {
  *   @Override
  *   public  void handleMessage(String connectionId, JsonNavigator data)  {
  *     // Do something with message
  *   }
  * });
- * </code></pre>
+ * </code>
+ * </pre>
  *
  * @author Keith M. Hughes
  */
 public class WebsocketMessageHandlers {
-
-  /**
-   * Message key giving the type of the message.
-   */
-  public static final String MESSAGE_FIELD_TYPE = "type";
-
-  /**
-   * Message key giving the data of the message.
-   */
-  public static final String MESSAGE_FIELD_DATA = "data";
 
   /**
    * The handlers for each message type.
@@ -94,12 +86,12 @@ public class WebsocketMessageHandlers {
   public void handleMessage(String connectionId, Object message) {
     JsonNavigator m = new JsonNavigator(message);
 
-    String messageType = m.getString(MESSAGE_FIELD_TYPE);
+    String messageType = m.getString(MessageWrapper.MESSAGE_FIELD_TYPE);
     if (messageType != null) {
       WebsocketMessageHandler handler = handlers.get(messageType);
       if (handler != null) {
         try {
-          handler.handleMessage(connectionId, m.down(MESSAGE_FIELD_DATA));
+          handler.handleMessage(connectionId, m.down(MessageWrapper.MESSAGE_FIELD_DATA));
         } catch (Exception e) {
           log.error(String.format("Error for message with type %s from connection %s", messageType, connectionId), e);
         }
