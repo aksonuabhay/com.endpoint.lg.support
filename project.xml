@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<project type="library" >
+    <name>Support for Liquid Galaxy projects</name>
+    <description>
+      Support For Liquid Galaxy.
+    </description>
+
+    <identifyingName>com.endpoint.lg.support</identifyingName>
+    <version>1.0.0.dev</version>
+</project>
