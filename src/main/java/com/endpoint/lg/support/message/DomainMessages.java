@@ -86,4 +86,22 @@ public class DomainMessages {
 
     return new Location(latitude, longitude, altitude);
   }
+
+  /**
+   * Serialize an location into the data.
+   *
+   * @param data
+   *          the incoming data
+   *
+   * @return a location for the data
+   */
+  public static void serializeLocation(Location location, JsonBuilder data) {
+    data.newObject(MessageFields.MESSAGE_FIELD_LOCATION);
+
+    data.put(MessageFields.MESSAGE_FIELD_LOCATION_ALTITUDE, location.getAltitude());
+    data.put(MessageFields.MESSAGE_FIELD_LOCATION_LATITUDE, location.getLatitude());
+    data.put(MessageFields.MESSAGE_FIELD_LOCATION_LONGITUDE, location.getLongitude());
+
+    data.up();
+  }
 }
