@@ -14,27 +14,27 @@
  * the License.
  */
 
-package com.endpoint.lg.support.message;
-
-import interactivespaces.util.data.json.JsonNavigator;
+package com.endpoint.lg.support.message.querytxt;
 
 /**
- * A handler for messages.
+ * Message types for messages going to querytxt.
  *
  * @author Keith M. Hughes
  */
-public interface WebsocketMessageHandler {
+public class MessageTypesQueryTxt {
 
   /**
-   * Handle a message which has come over the websocket.
-   *
-   * <p>
-   * The navigator will be placed in the data object.
-   *
-   * @param connectionId
-   *        connection ID for the websocket which sent the message
-   * @param data
-   *        the data for the message
+   * The querytxt message for taking a tour.
    */
-  public void handleMessage(String connectionId, JsonNavigator data);
+  public static final String MESSAGE_TYPE_QUERYTXT_TOUR = "tour";
+
+  /**
+   * The querytxt message for searching.
+   */
+  public static final String MESSAGE_TYPE_QUERYTXT_SEARCH = "search";
+
+  /**
+   * The querytxt message for flyto.
+   */
+  public static final String MESSAGE_TYPE_QUERYTXT_FLYTO = "flyto";
 }

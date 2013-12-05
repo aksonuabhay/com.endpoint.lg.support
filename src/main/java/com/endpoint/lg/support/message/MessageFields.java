@@ -1,27 +1,65 @@
-/**
+/*
+ * Copyright (C) 2013 Google Inc.
  *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
+
 package com.endpoint.lg.support.message;
 
 /**
+ * Message field names that are common across a collection of messaging.
+ *
  * @author Keith M. Hughes
  */
 public class MessageFields {
 
+  /**
+   * A location in the world.
+   */
   public static final String MESSAGE_FIELD_LOCATION = "location";
 
-  public static final String MESSAGE_FIELD_POSITION_ALTITUDE = "altitude";
+  /**
+   * The altitude.
+   */
+  public static final String MESSAGE_FIELD_LOCATION_ALTITUDE = "altitude";
 
-  public static final String MESSAGE_FIELD_POSITION_LONGITUDE = "longitude";
+  /**
+   * Location longitude.
+   */
+  public static final String MESSAGE_FIELD_LOCATION_LONGITUDE = "longitude";
 
-  public static final String MESSAGE_FIELD_POSITION_LATITUDE = "latitude";
+  /**
+   * Location latitude.
+   */
+  public static final String MESSAGE_FIELD_LOCATION_LATITUDE = "latitude";
 
+  /**
+   * The orientation of a view.
+   */
   public static final String MESSAGE_FIELD_ORIENTATION = "orientation";
 
+  /**
+   * The heading of the view.
+   */
   public static final String MESSAGE_FIELD_ORIENTATION_HEADING = "heading";
 
+  /**
+   * The tilt of a view. In degrees.
+   */
   public static final String MESSAGE_FIELD_ORIENTATION_TILT = "tilt";
 
+  /**
+   * The roll of a view. In degrees.
+   */
   public static final String MESSAGE_FIELD_ORIENTATION_ROLL = "roll";
-
 }
