@@ -51,7 +51,7 @@ public class MessageWrapper {
   public static JsonBuilder newTypedMessage(String messageType, Map<String, Object> data) {
     JsonBuilder message = newTypedMessage(messageType);
 
-    message.put(MESSAGE_FIELD_DATA, data);
+    message.putAll(data);
 
     return message;
   }
