@@ -97,12 +97,6 @@ public class InputEvent {
   }
 
   /**
-   * Constructs an empty <code>InputEvent</code>.
-   */
-  public InputEvent() {
-  }
-
-  /**
    * Constructs an <code>InputEvent</code> with the provided values.
    * 
    * @param type
