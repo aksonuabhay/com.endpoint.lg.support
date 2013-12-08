@@ -133,13 +133,7 @@ public class InputEvent {
    * @return event data as a <code>Map</code>
    */
   public Map<String, Object> getMap() {
-    Map<String, Object> data = Maps.newHashMap();
-
-    data.put("type", type);
-    data.put("code", code);
-    data.put("value", value);
-
-    return data;
+    return getJsonBuilder().build();
   }
 
   /**
