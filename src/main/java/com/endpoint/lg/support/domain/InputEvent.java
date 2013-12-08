@@ -53,6 +53,21 @@ public class InputEvent {
   public static final int OFFSET_VALUE = 20;
 
   /**
+   * InputEvent field for event type.
+   */
+  public static final String FIELD_TYPE = "type";
+
+  /**
+   * InputEvent field for event code.
+   */
+  public static final String FIELD_CODE = "code";
+
+  /**
+   * InputEvent field for event value.
+   */
+  public static final String FIELD_VALUE = "value";
+
+  /**
    * The event type. Though this is an unsigned short in the kernel struct, we
    * use an int.
    */
@@ -122,9 +137,9 @@ public class InputEvent {
    *          event data
    */
   public InputEvent(JsonNavigator json) {
-    type = json.getInteger("type").intValue();
-    code = json.getInteger("code").intValue();
-    value = json.getInteger("value").intValue();
+    type = json.getInteger(FIELD_TYPE).intValue();
+    code = json.getInteger(FIELD_CODE).intValue();
+    value = json.getInteger(FIELD_VALUE).intValue();
   }
 
   /**
@@ -144,9 +159,9 @@ public class InputEvent {
   public JsonBuilder getJsonBuilder() {
     JsonBuilder json = new JsonBuilder();
 
-    json.put("type", type);
-    json.put("code", code);
-    json.put("value", value);
+    json.put(FIELD_TYPE, type);
+    json.put(FIELD_CODE, code);
+    json.put(FIELD_VALUE, value);
 
     return json;
   }
