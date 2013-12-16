@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.endpoint.lg.support.domain;
+package com.endpoint.lg.support.domain.evdev;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
