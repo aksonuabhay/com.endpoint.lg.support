@@ -21,7 +21,6 @@ import interactivespaces.util.data.json.JsonNavigator;
 
 import java.util.Map;
 import java.nio.ByteBuffer;
-import com.google.common.collect.Maps;
 
 /**
  * An input event, representing the data structure in linux/input.h.
