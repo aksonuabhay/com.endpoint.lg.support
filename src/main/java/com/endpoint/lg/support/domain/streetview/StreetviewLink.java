@@ -1,4 +1,4 @@
-package com.endpoint.lg.support.domain;
+package com.endpoint.lg.support.domain.streetview;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
