@@ -17,14 +17,14 @@ public class MessageTypesStreetview {
   public static final String MESSAGE_TYPE_STREETVIEW_PANO = "pano";
   
   /**
-   * Message type for a Ros POV sync from the master.
+   * Message type for links change.
    */
-  public static final String MESSAGE_TYPE_STREETVIEW_SYNC_POV = "sync_pov";
+  public static final String MESSAGE_TYPE_STREETVIEW_LINKS = "links";
   
   /**
-   * Message type for a Ros pano sync from the master.
+   * Message type for remote logging.
    */
-  public static final String MESSAGE_TYPE_STREETVIEW_SYNC_PANO = "sync_pano";
+  public static final String MESSAGE_TYPE_STREETVIEW_LOG = "log";
   
   /**
    * Message type for a refresh request.
