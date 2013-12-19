@@ -21,6 +21,10 @@ public class StreetviewLinks {
     return links;
   }
 
+  public boolean hasLinks() {
+    return links.length > 0;
+  }
+
   /**
    * Constructs an empty link collection.
    */
