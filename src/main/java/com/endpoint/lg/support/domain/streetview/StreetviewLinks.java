@@ -11,10 +11,10 @@ import interactivespaces.util.data.json.JsonNavigator;
 public class StreetviewLinks {
 
   /**
-   * StreetviewLinks field for links to neighboring panoids.
+   * StreetviewLinks field for links to neighboring panos.
    */
   public static final String FIELD_LINKS = "links";
-  
+
   private StreetviewLink[] links;
 
   public StreetviewLink[] getLinks() {
