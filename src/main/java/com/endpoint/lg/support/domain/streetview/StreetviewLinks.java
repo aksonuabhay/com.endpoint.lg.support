@@ -49,5 +49,7 @@ public class StreetviewLinks {
       JsonNavigator item = new JsonNavigator(json.getItem(i));
       links[i] = new StreetviewLink(item);
     }
+
+    json.up(); // leave it the way you found it
   }
 }
