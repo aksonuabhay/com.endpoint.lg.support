@@ -33,15 +33,19 @@ public class StreetviewLinks {
   /**
    * Constructs a link collection from given <code>JsonNavigator</code>.
    * 
-   * @param json
-   *          array of links
+   * <p>
+   * Incoming data should be in the format: { "links": [ { "pano": <panoid>,
+   * "heading": <heading> }, { ... } ] }
    */
   public StreetviewLinks(JsonNavigator json) {
+    json.down(FIELD_LINKS);
+
     int numLinks = json.getSize();
     links = new StreetviewLink[numLinks];
 
     for (int i = 0; i < numLinks; i++) {
-      links[i] = new StreetviewLink(json.down(i));
+      JsonNavigator item = new JsonNavigator(json.getItem(i));
+      links[i] = new StreetviewLink(item);
     }
   }
 }
