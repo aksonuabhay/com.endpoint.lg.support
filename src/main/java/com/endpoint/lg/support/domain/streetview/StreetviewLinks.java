@@ -73,6 +73,7 @@ public class StreetviewLinks {
    * @return nearest link or null if empty
    */
   public StreetviewLink getNearestLink(double heading) {
+    heading %= 360;
     StreetviewLink nearest = null;
     double nearestDifference = 360;
 
