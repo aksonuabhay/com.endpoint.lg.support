@@ -56,13 +56,15 @@ public class StreetviewLinks {
    * Helper for finding the angular difference between two headings.
    * 
    * @param h1
-   *          first heading in degrees
+   *          first heading in degrees (-inf, inf)
    * @param h2
-   *          second heading in degrees
-   * @return difference in degrees
+   *          second heading in degrees (-inf, inf)
+   * @return difference in degrees [0, 180)
    */
-  private double headingDifference(double h1, double h2) {
-    return Math.abs(((h1 - h2) + 180) % 360 - 180);
+  private double headingDifference(double source, double target) {
+    double diff = Math.abs(target - source) % 360;
+
+    return diff >= 180 ? diff - (diff - 180) * 2 : diff;
   }
 
   /**
@@ -73,12 +75,11 @@ public class StreetviewLinks {
    * @return nearest link or null if empty
    */
   public StreetviewLink getNearestLink(double heading) {
-    heading %= 360;
     StreetviewLink nearest = null;
-    double nearestDifference = 360;
+    double nearestDifference = 180;
 
     for (StreetviewLink link : links) {
-      double difference = headingDifference(link.getHeading(), heading);
+      double difference = headingDifference(heading, link.getHeading());
 
       if (difference < nearestDifference) {
         nearestDifference = difference;
