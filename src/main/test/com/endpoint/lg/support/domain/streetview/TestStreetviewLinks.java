@@ -16,44 +16,76 @@ import org.junit.Test;
 public class TestStreetviewLinks {
   private static StreetviewLinks emptyLinks;
   private static StreetviewLinks testLinks;
-  
+  private static double[] expected;
+
   @BeforeClass
   public static void testSetup() {
     JsonBuilder testBuilder = new JsonBuilder();
     JsonBuilder testArray = testBuilder.newArray(StreetviewLinks.FIELD_LINKS);
 
-    testArray.put(new StreetviewLink("at_90", 90).getMap());
-    testArray.put(new StreetviewLink("at_270", 270).getMap());
-    testArray.put(new StreetviewLink("at_300", 300).getMap());
+    testArray.put(new StreetviewLink("at_1", 1).getMap());
+    testArray.put(new StreetviewLink("at_60", 60).getMap());
+    testArray.put(new StreetviewLink("at_178", 178).getMap());
 
     testLinks = new StreetviewLinks(new JsonNavigator(testBuilder.build()));
-    
+
     emptyLinks = new StreetviewLinks();
+
+    expected =
+        new double[] { 1, 1, 1, 1, 60, 60, 60, 60, 60, 60, 60, 60, 178, 178, 178, 178, 178, 178,
+            178, 178, 178, 178, 178, 178, 178, 178, 178, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
   }
-  
+
   @Test
   public void test() {
     assertFalse("Empty object has no links", emptyLinks.hasLinks());
-    
+
     assertTrue("Test object has links", testLinks.hasLinks());
-    
+
     assertEquals(3, testLinks.getLinks().length);
 
-    assertEquals(90, testLinks.getNearestLink(90).getHeading(), 0);
+    double testHeading, front, behind;
 
-    assertEquals(90, testLinks.getFurthestLink(270).getHeading(), 0);
-    assertEquals(270, testLinks.getFurthestLink(90).getHeading(), 0);
+    for (int i = 0; i < 36; i++) {
+      testHeading = i * 10;
 
-    assertEquals("First wins if equidistant", 90, testLinks.getNearestLink(180).getHeading(), 0);
+      front = testLinks.getNearestLink(testHeading).getHeading();
+      behind = testLinks.getFurthestLink(testHeading).getHeading();
 
-    assertEquals(300, testLinks.getNearestLink(-60).getHeading(), 0);
-    assertEquals(270, testLinks.getNearestLink(-90).getHeading(), 0);
-    assertEquals(90, testLinks.getNearestLink(-270).getHeading(), 0);
-    assertEquals(270, testLinks.getNearestLink(-450).getHeading(), 0);
-    assertEquals(90, testLinks.getNearestLink(-630).getHeading(), 0);
+      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
 
-    assertEquals(90, testLinks.getNearestLink(450).getHeading(), 0);
-    assertEquals(270, testLinks.getNearestLink(630).getHeading(), 0);
-    assertEquals(300, testLinks.getNearestLink(660).getHeading(), 0);
+      testHeading = i * 10 + 360.0;
+
+      front = testLinks.getNearestLink(testHeading).getHeading();
+      behind = testLinks.getFurthestLink(testHeading).getHeading();
+
+      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+
+      testHeading = i * 10 + 720.0;
+
+      front = testLinks.getNearestLink(testHeading).getHeading();
+      behind = testLinks.getFurthestLink(testHeading).getHeading();
+
+      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+
+      testHeading = i * 10 - 360.0;
+
+      front = testLinks.getNearestLink(testHeading).getHeading();
+      behind = testLinks.getFurthestLink(testHeading).getHeading();
+
+      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+
+      testHeading = i * 10 - 720.0;
+
+      front = testLinks.getNearestLink(testHeading).getHeading();
+      behind = testLinks.getFurthestLink(testHeading).getHeading();
+
+      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+    }
   }
 }
