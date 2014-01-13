@@ -1,10 +1,12 @@
-package com.endpoint.lg.support.domain.streetview;
+package com.endpoint.lg.support.test.domain.streetview;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
 
-import static org.junit.Assert.*;
+import com.endpoint.lg.support.domain.streetview.StreetviewLink;
+import com.endpoint.lg.support.domain.streetview.StreetviewLinks;
 
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
