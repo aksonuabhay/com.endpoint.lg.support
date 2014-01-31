@@ -17,15 +17,12 @@
 package com.endpoint.lg.support.window;
 
 /**
- * Basic implementation of WindowIdentity, intended to be instantiated empty and
- * set by chaining.
- * <p>
- * new BasicWindowIdentity().setWindowName("foo").setWindowClass("bar");
+ * A WindowIdentity searching by class.
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class BasicWindowIdentity extends WindowIdentity {
-  public BasicWindowIdentity() {
-
+public class WindowClassIdentity extends WindowIdentity {
+  public WindowClassIdentity(String identifier) {
+    setIdentifier(identifier, WindowIdentity.IdType.CLASS);
   }
 }

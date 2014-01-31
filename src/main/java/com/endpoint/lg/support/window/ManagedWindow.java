@@ -19,10 +19,11 @@ package com.endpoint.lg.support.window;
 import interactivespaces.activity.impl.BaseActivity;
 import interactivespaces.configuration.Configuration;
 import interactivespaces.configuration.SystemConfiguration;
-import interactivespaces.system.InteractiveSpacesEnvironment;
 import interactivespaces.util.process.NativeCommandsExecutor;
+import interactivespaces.util.resource.ManagedResource;
 
 import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -31,11 +32,11 @@ import java.util.concurrent.ScheduledExecutorService;
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class ManagedWindow {
+public class ManagedWindow implements ManagedResource {
   /**
    * Configuration key for viewport name.
    */
-  public static final String CONFIG_KEY_VIEWPORT_NAME = "viewport.name";
+  public static final String CONFIG_KEY_VIEWPORT_TARGET = "viewport.target";
 
   /**
    * Configuration key for window width relative to viewport.
@@ -80,6 +81,7 @@ public class ManagedWindow {
   private static final String XDOTOOL_BIN = "/usr/bin/xdotool";
   private static final String MSG_NOT_IMPLEMENTED =
       "Window management not implemented for this platform";
+  // XXX: these should be defined somewhere else
   private static final String PLATFORM_LINUX = "linux";
   private static final String PLATFORM_OSX = "osx";
 
@@ -95,8 +97,7 @@ public class ManagedWindow {
    */
   private boolean checkPlatformSupport() {
     String platform =
-        activity.getSpaceEnvironment().getSystemConfiguration()
-            .getPropertyString(SystemConfiguration.PLATFORM_OS);
+        activity.getConfiguration().getPropertyString(SystemConfiguration.PLATFORM_OS);
 
     if (platform.equals(PLATFORM_LINUX))
       return true;
@@ -112,25 +113,25 @@ public class ManagedWindow {
    * @return absolute viewport geometry
    */
   private WindowGeometry findViewportGeometry() {
-    Configuration systemConfig = activity.getSpaceEnvironment().getSystemConfiguration();
-    
-    String viewportName = activity.getConfiguration().getPropertyString(CONFIG_KEY_VIEWPORT_NAME, null);
-    
+    Configuration activityConfig = activity.getConfiguration();
+
+    String viewportName = activityConfig.getPropertyString(CONFIG_KEY_VIEWPORT_TARGET, null);
+
     if (viewportName == null) {
       activity.getLog().debug("Viewport not configured");
       return null; // bypass if viewport not configured
     }
-    
+
     String widthKey = String.format(CONFIG_KEY_VIEWPORT_WIDTH, viewportName);
     String heightKey = String.format(CONFIG_KEY_VIEWPORT_HEIGHT, viewportName);
     String xKey = String.format(CONFIG_KEY_VIEWPORT_X, viewportName);
     String yKey = String.format(CONFIG_KEY_VIEWPORT_Y, viewportName);
-    
-    Integer width = systemConfig.getPropertyInteger(widthKey, null);
-    Integer height = systemConfig.getPropertyInteger(heightKey, null);
-    Integer x = systemConfig.getPropertyInteger(xKey, null);
-    Integer y = systemConfig.getPropertyInteger(yKey, null);
-    
+
+    Integer width = activityConfig.getPropertyInteger(widthKey, null);
+    Integer height = activityConfig.getPropertyInteger(heightKey, null);
+    Integer x = activityConfig.getPropertyInteger(xKey, null);
+    Integer y = activityConfig.getPropertyInteger(yKey, null);
+
     if (width != null && height != null && x != null && y != null) {
       return new WindowGeometry(width, height, x, y);
     } else {
@@ -181,19 +182,16 @@ public class ManagedWindow {
    * @return xdotool args
    */
   private List<String> buildSearchArgs(WindowIdentity id) {
-    List<String> args = Lists.newArrayList();
+    List<String> args = Lists.newArrayList("search", "--maxdepth", "1", "--limit", "1", "--sync");
 
-    if (id.getWindowName() != null) {
-      args.addAll(Lists.newArrayList("search", "--maxdepth", "1", "--limit", "1", "--sync",
-          "--name", id.getWindowName()));
-    }
-    if (id.getWindowClass() != null) {
-      args.addAll(Lists.newArrayList("search", "--maxdepth", "1", "--limit", "1", "--sync",
-          "--class", id.getWindowClass()));
-    }
-    if (id.getWindowInstance() != null) {
-      args.addAll(Lists.newArrayList("search", "--maxdepth", "1", "--limit", "1", "--sync",
-          "--classname", id.getWindowInstance()));
+    String identifier = id.getIdentifier();
+
+    if (id.getType() == WindowIdentity.IdType.NAME) {
+      args.addAll(Lists.newArrayList("--name", identifier));
+    } else if (id.getType() == WindowIdentity.IdType.CLASS) {
+      args.addAll(Lists.newArrayList("--class", identifier));
+    } else if (id.getType() == WindowIdentity.IdType.INSTANCE) {
+      args.addAll(Lists.newArrayList("--classname", identifier));
     }
 
     return args;
@@ -226,13 +224,17 @@ public class ManagedWindow {
    * Positions the window.
    */
   private void positionWindow() {
+    if (!checkPlatformSupport()) {
+      activity.getLog().warn(MSG_NOT_IMPLEMENTED);
+      return;
+    }
+
     finalGeometry = calculateGeometry();
 
     if (finalGeometry == null)
       return; // bypass when geometry could not be found
 
-    InteractiveSpacesEnvironment environment = activity.getSpaceEnvironment();
-    ScheduledExecutorService executor = environment.getExecutorService();
+    ScheduledExecutorService executor = activity.getSpaceEnvironment().getExecutorService();
 
     executor.execute(new Runnable() {
       public void run() {
@@ -252,7 +254,8 @@ public class ManagedWindow {
   }
 
   /**
-   * Constructs a ManagedWindow for the given activity.
+   * Constructs a ManagedWindow for the given activity with a relative window
+   * geometry offset.
    * 
    * @param activity
    *          the activity responsible for the window
@@ -265,13 +268,6 @@ public class ManagedWindow {
     this.activity = activity;
     this.identity = identity;
     this.geometryOffset = geometryOffset;
-
-    if (!checkPlatformSupport()) {
-      activity.getLog().warn(MSG_NOT_IMPLEMENTED);
-      return;
-    }
-
-    positionWindow();
   }
 
   /**
@@ -286,15 +282,22 @@ public class ManagedWindow {
     this(activity, identity, new WindowGeometry(0, 0, 0, 0));
   }
 
+  @Override
+  public void shutdown() {
+  }
+
+  /**
+   * Start managing the window.
+   */
+  @Override
+  public void startup() {
+    positionWindow();
+  }
+
   /**
    * Updates the window positioning, picking up changes in configuration.
    */
   public void update() {
-    if (!checkPlatformSupport()) {
-      activity.getLog().warn(MSG_NOT_IMPLEMENTED);
-      return;
-    }
-
     positionWindow();
   }
 }

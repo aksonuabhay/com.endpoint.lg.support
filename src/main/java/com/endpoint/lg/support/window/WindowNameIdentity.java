@@ -17,36 +17,12 @@
 package com.endpoint.lg.support.window;
 
 /**
- * Identifies a window by a public, searchable property.
+ * A WindowIdentity searching by instance.
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public abstract class WindowIdentity {
-  public enum IdType {
-    NAME, CLASS, INSTANCE
-  };
-
-  protected String identifier;
-  protected IdType type;
-  
-  protected void setIdentifier(String windowIdentifier, IdType type) {
-    this.identifier = windowIdentifier;
-    this.type = type;
-  }
-
-  /**
-   * Returns the search string.
-   * @return string matching a window property
-   */
-  public String getIdentifier() {
-    return identifier;
-  }
-  
-  /**
-   * Returns the type of property to be searched.
-   * @return property type
-   */
-  public IdType getType() {
-    return type;
+public class WindowNameIdentity extends WindowIdentity {
+  public WindowNameIdentity(String identifier) {
+    setIdentifier(identifier, WindowIdentity.IdType.NAME);
   }
 }

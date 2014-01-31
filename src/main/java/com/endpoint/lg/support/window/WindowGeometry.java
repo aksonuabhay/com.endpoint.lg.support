@@ -59,20 +59,29 @@ public class WindowGeometry {
     this.y = y;
   }
 
-  public void offsetBy(int width, int height, int x, int y) {
-    this.width += width;
-    this.height += height;
-    this.x += x;
-    this.y += y;
+  /**
+   * Translates by the given relative dimensions.
+   */
+  public void offsetBy(int relativeWidth, int relativeHeight, int relativeX, int relativeY) {
+    this.width += relativeWidth;
+    this.height += relativeHeight;
+    this.x += relativeX;
+    this.y += relativeY;
   }
 
-  public void offsetBy(WindowGeometry relative) {
-    this.width += relative.getWidth();
-    this.height += relative.getHeight();
-    this.x += relative.getX();
-    this.y += relative.getY();
+  /**
+   * Translates by the given relative geometry.
+   */
+  public void offsetBy(WindowGeometry relativeGeometry) {
+    this.width += relativeGeometry.getWidth();
+    this.height += relativeGeometry.getHeight();
+    this.x += relativeGeometry.getX();
+    this.y += relativeGeometry.getY();
   }
 
+  /**
+   * Constructs WindowGeometry with the given dimensions.
+   */
   public WindowGeometry(int width, int height, int x, int y) {
     this.width = width;
     this.height = height;

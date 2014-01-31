@@ -17,15 +17,12 @@
 package com.endpoint.lg.support.window;
 
 /**
- * Shortcut for browser windows which have predictable identities.
+ * A WindowIdentity searching by instance.
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class BrowserWindowIdentity extends WindowIdentity {
-  public static final String BROWSER_WINDOW_CLASS = "Google-chrome";
-
-  public BrowserWindowIdentity(String instance) {
-    windowInstance = instance;
-    windowClass = BROWSER_WINDOW_CLASS;
+public class WindowInstanceIdentity extends WindowIdentity {
+  public WindowInstanceIdentity(String identifier) {
+    setIdentifier(identifier, WindowIdentity.IdType.INSTANCE);
   }
 }
