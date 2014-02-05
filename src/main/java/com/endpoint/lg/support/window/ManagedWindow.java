@@ -36,47 +36,47 @@ public class ManagedWindow implements ManagedResource {
   /**
    * Configuration key for viewport name.
    */
-  public static final String CONFIG_KEY_VIEWPORT_TARGET = "viewport.target";
+  public static final String CONFIG_KEY_VIEWPORT_TARGET = "lg.window.viewport.target";
 
   /**
    * Configuration key for window width relative to viewport.
    */
-  public static final String CONFIG_KEY_WINDOW_REL_WIDTH = "window.rel.width";
+  public static final String CONFIG_KEY_WINDOW_REL_WIDTH = "lg.window.rel.width";
 
   /**
    * Configuration key for window height relative to viewport.
    */
-  public static final String CONFIG_KEY_WINDOW_REL_HEIGHT = "window.rel.height";
+  public static final String CONFIG_KEY_WINDOW_REL_HEIGHT = "lg.window.rel.height";
 
   /**
    * Configuration key for window x placement relative to viewport.
    */
-  public static final String CONFIG_KEY_WINDOW_REL_X = "window.rel.x";
+  public static final String CONFIG_KEY_WINDOW_REL_X = "lg.window.rel.x";
 
   /**
    * Configuration key for window y placement relative to viewport.
    */
-  public static final String CONFIG_KEY_WINDOW_REL_Y = "window.rel.y";
+  public static final String CONFIG_KEY_WINDOW_REL_Y = "lg.window.rel.y";
 
   /**
    * Configuration key for viewport width.
    */
-  public static final String CONFIG_KEY_VIEWPORT_WIDTH = "viewport.%s.width";
+  public static final String CONFIG_KEY_VIEWPORT_WIDTH = "lg.window.viewport.%s.width";
 
   /**
    * Configuration key for viewport height.
    */
-  public static final String CONFIG_KEY_VIEWPORT_HEIGHT = "viewport.%s.height";
+  public static final String CONFIG_KEY_VIEWPORT_HEIGHT = "lg.window.viewport.%s.height";
 
   /**
    * Configuration key for viewport x offset.
    */
-  public static final String CONFIG_KEY_VIEWPORT_X = "viewport.%s.x";
+  public static final String CONFIG_KEY_VIEWPORT_X = "lg.window.viewport.%s.x";
 
   /**
    * Configuration key for viewport y offset.
    */
-  public static final String CONFIG_KEY_VIEWPORT_Y = "viewport.%s.y";
+  public static final String CONFIG_KEY_VIEWPORT_Y = "lg.window.viewport.%s.y";
 
   private static final String XDOTOOL_BIN = "/usr/bin/xdotool";
   private static final String MSG_NOT_IMPLEMENTED =
