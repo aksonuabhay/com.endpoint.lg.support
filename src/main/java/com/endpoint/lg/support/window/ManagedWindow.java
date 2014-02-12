@@ -182,7 +182,7 @@ public class ManagedWindow implements ManagedResource {
    * @return xdotool args
    */
   private List<String> buildSearchArgs(WindowIdentity id) {
-    List<String> args = Lists.newArrayList("search", "--maxdepth", "1", "--limit", "1", "--sync");
+    List<String> args = Lists.newArrayList("search", "--maxdepth", "1", "--limit", "1", "--sync", "--onlyvisible");
 
     String identifier = id.getIdentifier();
 
