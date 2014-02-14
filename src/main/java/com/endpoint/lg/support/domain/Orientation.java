@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2013-2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,7 +23,15 @@ package com.endpoint.lg.support.domain;
  */
 public class Orientation {
 
+  /**
+   * The heading
+   */
   private Double heading;
+
+  /**
+   * The range
+   */
+  private Double range;
 
   /**
    * The tilt, in degrees.
@@ -31,15 +39,16 @@ public class Orientation {
   private Double tilt;
 
   /**
-   * The tilt, in degrees.
+   * The roll, in degrees.
    */
   private Double roll;
 
   public Orientation() {
   }
 
-  public Orientation(Double heading, Double tilt, Double roll) {
+  public Orientation(Double heading, Double range, Double tilt, Double roll) {
     this.heading = heading;
+    this.range = range;
     this.tilt = tilt;
     this.roll = roll;
   }
@@ -50,6 +59,14 @@ public class Orientation {
 
   public void setHeading(Double heading) {
     this.heading = heading;
+  }
+
+  public Double getRange() {
+    return range;
+  }
+
+  public void setRange(Double range) {
+    this.range = range;
   }
 
   public Double getTilt() {

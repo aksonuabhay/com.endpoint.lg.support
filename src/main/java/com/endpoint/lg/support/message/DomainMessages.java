@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2013-2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,12 +41,13 @@ public class DomainMessages {
     data.down(MessageFields.MESSAGE_FIELD_ORIENTATION);
 
     Double heading = data.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_HEADING);
+    Double range = data.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_RANGE);
     Double tilt = data.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_TILT);
     Double roll = data.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_ROLL);
 
     data.up();
 
-    return new Orientation(heading, tilt, roll);
+    return new Orientation(heading, range, tilt, roll);
   }
 
   /**
@@ -61,6 +62,7 @@ public class DomainMessages {
     data.newObject(MessageFields.MESSAGE_FIELD_ORIENTATION);
 
     data.put(MessageFields.MESSAGE_FIELD_ORIENTATION_HEADING, orientation.getHeading());
+    data.put(MessageFields.MESSAGE_FIELD_ORIENTATION_RANGE, orientation.getRange());
     data.put(MessageFields.MESSAGE_FIELD_ORIENTATION_TILT, orientation.getTilt());
     data.put(MessageFields.MESSAGE_FIELD_ORIENTATION_ROLL, orientation.getRoll());
 

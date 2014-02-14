@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2013-2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -52,6 +52,11 @@ public class MessageFields {
    * The heading of the view.
    */
   public static final String MESSAGE_FIELD_ORIENTATION_HEADING = "heading";
+
+  /**
+   * The range of the view.
+   */
+  public static final String MESSAGE_FIELD_ORIENTATION_RANGE = "range";
 
   /**
    * The tilt of a view. In degrees.
