@@ -67,4 +67,26 @@ public class MessageFields {
    * The roll of a view. In degrees.
    */
   public static final String MESSAGE_FIELD_ORIENTATION_ROLL = "roll";
+  
+  /**
+   * The time start
+   */
+  public static final String MESSAGE_FIELD_TIMESTART = "timestart";
+  
+  /**
+   * The time start
+   */
+  public static final String MESSAGE_FIELD_TIMEEND = "timeend";
+  
+  /**
+   * The time start
+   */
+  public static final String MESSAGE_FIELD_COUNTER = "counter";
+  
+  /**
+   * The time start
+   */
+  public static final String MESSAGE_FIELD_PLANET = "planet";
+  
+  
 }

@@ -81,7 +81,7 @@ public class ManagedWindow implements ManagedResource {
   private static final String XDOTOOL_BIN = "/usr/bin/xdotool";
   private static final String MSG_NOT_IMPLEMENTED =
       "Window management not implemented for this platform";
-  // XXX: these should be defined somewhere else
+  // TODO: these should be defined somewhere else
   private static final String PLATFORM_LINUX = "linux";
   private static final String PLATFORM_OSX = "osx";
 
