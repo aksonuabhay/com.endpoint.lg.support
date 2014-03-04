@@ -134,7 +134,9 @@ public class EarthViewSyncState {
 	 */
 	public EarthViewSyncState(String viewsyncData) {
 
-		String[] viewsyncDataParsed = viewsyncData.split("\\,");
+		// http://code.google.com/p/liquid-galaxy/wiki/GoogleEarth_ViewSync
+		String[] viewsyncDataParsed = new String[10];
+		viewsyncDataParsed = viewsyncData.split("\\,");
 
 		double counter = Double.parseDouble(viewsyncDataParsed[0]);
 		double latitude = Double.parseDouble(viewsyncDataParsed[1]);
@@ -147,7 +149,13 @@ public class EarthViewSyncState {
 		double timeend = Double.parseDouble(viewsyncDataParsed[8]);
 		double range = 0; // we don't have range for Orientation object
 
-		String planet = viewsyncDataParsed[9];
+		// the planet portion of the comma-separated-values from Earth might be
+		// empty - need to account for that
+		if ( viewsyncDataParsed.length > 9 ) {
+			String planet = viewsyncDataParsed[9];
+		} else {
+			String planet = "";
+		}
 
 		Location location = new Location(latitude, longitude, altitude);
 		Orientation orientation = new Orientation(heading, range, tilt, roll);
