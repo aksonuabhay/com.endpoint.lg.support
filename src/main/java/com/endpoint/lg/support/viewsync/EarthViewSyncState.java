@@ -29,194 +29,207 @@ import com.endpoint.lg.support.message.MessageFields;
  * Support class for the ViewSync messaging
  * 
  * @author Wojciech Ziniewicz <wojtek@endpoint.com>
- *
+ * 
  */
 
 public class EarthViewSyncState {
-	/*
-	 * The orientation: heading, tilt, roll, (range)
-	 */
-	private Orientation orientation; 
-	
-	/*
-	 * The location: lattitude, longitude, altitude
-	 */
-	private Location location; 
-	
-	/*
-	 * The planet: "sky", "mars", "moon", empty "" is Earth
-	 */
-	private String planet;
-	
-	/*
-	 * The timestart
-	 */
-	private Double timestart;
-	
-	/*
-	 * The timeend
-	 */
-	private Double timeend;
-	
-	/*
-	 * The counter
-	 */
-	private Double counter;
-	
-	/*
-	 * Getter for counter
-	 * @return counter
-	 */
-	public Double getCounter() {
-		return counter;
-	}
-	
-	/*
-	 * Planet getter
-	 * @return planet
-	 */
-	public String getPlanet() {
-		return planet;
-	}
-	
-	/*
-	 * Getter for time start
-	 * @return timestart
-	 */
-	public Double getTimeStart() {
-		return timestart;
-	}
-	
-	/*
-	 * Getter for time end
-	 * @return timeend
-	 */
-	public Double getTimeEnd() {
-		return timeend;
-	}
+  /*
+   * The orientation: heading, tilt, roll, (range)
+   */
+  private Orientation orientation;
 
-	/*
-	 * Getter for Location
-	 * @return Location
-	 * @see com.endpoint.lg.support.domain.Location
-	 */
-	public Location getLocation() {
-		return location;
-	}
-	
-	/*
-	 * Getter for Orientation
-	 * @return Orientation
-	 * @see com.endpoint.lg.support.domain.Orientation
-	 */
-	public Orientation getOrientation() {
-		return orientation;
-	}
+  /*
+   * The location: lattitude, longitude, altitude
+   */
+  private Location location;
 
-	/*
-	 * Setter for Location
-	 * @see com.endpoint.lg.support.domain.Location
-	 */
-	public void setLocation(Location location) {
-		 this.location = location;
-	}
-	
-	/*
-	 * Setter for Orientation
-	 * @see com.endpoint.lg.support.domain.Orientation
-	 */
-	public void setOrientation(Orientation orientation) {
-		 this.orientation = orientation;
-	}
-	  
-	/*
-	 * Constructor for EarthViewSyncState
-	 * 
-	 * @param viewsyncData - udp packet from ROS
-	 */
-	public EarthViewSyncState(String viewsyncData) {
+  /*
+   * The planet: "sky", "mars", "moon", empty "" is Earth
+   */
+  private String planet;
 
-		// http://code.google.com/p/liquid-galaxy/wiki/GoogleEarth_ViewSync
-		String[] viewsyncDataParsed = new String[10];
-		viewsyncDataParsed = viewsyncData.split("\\,");
+  /*
+   * The timestart
+   */
+  private Double timestart;
 
-		double counter = Double.parseDouble(viewsyncDataParsed[0]);
-		double latitude = Double.parseDouble(viewsyncDataParsed[1]);
-		double longitude = Double.parseDouble(viewsyncDataParsed[2]);
-		double altitude = Double.parseDouble(viewsyncDataParsed[3]);
-		double heading = Double.parseDouble(viewsyncDataParsed[4]);
-		double tilt = Double.parseDouble(viewsyncDataParsed[5]);
-		double roll = Double.parseDouble(viewsyncDataParsed[6]);
-		double timestart = Double.parseDouble(viewsyncDataParsed[7]);
-		double timeend = Double.parseDouble(viewsyncDataParsed[8]);
-		double range = 0; // we don't have range for Orientation object
+  /*
+   * The timeend
+   */
+  private Double timeend;
 
-		// the planet portion of the comma-separated-values from Earth might be
-		// empty - need to account for that
-		if ( viewsyncDataParsed.length > 9 ) {
-			String planet = viewsyncDataParsed[9];
-		} else {
-			String planet = "";
-		}
+  /*
+   * The counter
+   */
+  private Double counter;
 
-		Location location = new Location(latitude, longitude, altitude);
-		Orientation orientation = new Orientation(heading, range, tilt, roll);
+  /*
+   * Getter for counter
+   * 
+   * @return counter
+   */
+  public Double getCounter() {
+    return counter;
+  }
 
-		this.timestart = timestart;
-		this.timeend = timeend;
-		this.planet = planet;
-		this.counter = counter;
-		this.location = location;
-		this.orientation = orientation;
+  /*
+   * Planet getter
+   * 
+   * @return planet
+   */
+  public String getPlanet() {
+    return planet;
+  }
 
-	}
+  /*
+   * Getter for time start
+   * 
+   * @return timestart
+   */
+  public Double getTimeStart() {
+    return timestart;
+  }
 
-	// TODO: deserialize an EarthViewSyncState that has arrived from Ros
-	/*
-	 * Deserialize json that has arrived from ROS
-	 */
-	public EarthViewSyncState(JsonNavigator json) {
-	    location = new Location(json.getDouble(MessageFields.MESSAGE_FIELD_LOCATION_LATITUDE).doubleValue(),
-	    		json.getDouble(MessageFields.MESSAGE_FIELD_LOCATION_LONGITUDE).doubleValue(),
-	    		json.getDouble(MessageFields.MESSAGE_FIELD_LOCATION_ALTITUDE).doubleValue());
-	    orientation = new Orientation(json.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_HEADING).doubleValue(),
-	    		json.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_RANGE).doubleValue(),
-	    		json.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_TILT).doubleValue(),
-	    		json.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_ROLL).doubleValue());
-	    timestart = json.getDouble(MessageFields.MESSAGE_FIELD_TIMESTART).doubleValue();
-	    timeend = json.getDouble(MessageFields.MESSAGE_FIELD_TIMEEND).doubleValue();
-	    planet = json.getString(MessageFields.MESSAGE_FIELD_PLANET);
-	    counter = json.getDouble(MessageFields.MESSAGE_FIELD_COUNTER).doubleValue();
-	}
+  /*
+   * Getter for time end
+   * 
+   * @return timeend
+   */
+  public Double getTimeEnd() {
+    return timeend;
+  }
 
-	/*
-	 * Serialize a JsonBuilder from EarthViewSyncState instance
-	 */
-	public JsonBuilder getJsonBuilder() {
-		// serialize a JsonBuilder from an EarthViewSyncState instance
-		JsonBuilder json = new JsonBuilder();
+  /*
+   * Getter for Location
+   * 
+   * @return Location
+   * 
+   * @see com.endpoint.lg.support.domain.Location
+   */
+  public Location getLocation() {
+    return location;
+  }
 
-	    json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_HEADING, orientation.getHeading());
-	    json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_RANGE, orientation.getRange());
-	    json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_TILT, orientation.getTilt());
-	    json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_ROLL, orientation.getRoll());
-		json.put(MessageFields.MESSAGE_FIELD_LOCATION_LATITUDE, location.getLatitude());
-		json.put(MessageFields.MESSAGE_FIELD_LOCATION_LONGITUDE, location.getLongitude());
-		json.put(MessageFields.MESSAGE_FIELD_LOCATION_ALTITUDE, location.getAltitude());
-		json.put(MessageFields.MESSAGE_FIELD_TIMEEND, timeend);
-	    json.put(MessageFields.MESSAGE_FIELD_TIMESTART, timestart);
-	    json.put(MessageFields.MESSAGE_FIELD_COUNTER, counter);
-	    json.put(MessageFields.MESSAGE_FIELD_PLANET, planet);
-	    
-	    return json;
-	}
+  /*
+   * Getter for Orientation
+   * 
+   * @return Orientation
+   * 
+   * @see com.endpoint.lg.support.domain.Orientation
+   */
+  public Orientation getOrientation() {
+    return orientation;
+  }
 
-	/**
-	 * Get a <code>Map</code> of the viewsync state.
-	 * 
-	 * @return map representation of the viewsync state
-	 */
-	public Map<String, Object> getMap() {
-	  return getJsonBuilder().build();
-	}
+  /*
+   * Setter for Location
+   * 
+   * @see com.endpoint.lg.support.domain.Location
+   */
+  public void setLocation(Location location) {
+    this.location = location;
+  }
+
+  /*
+   * Setter for Orientation
+   * 
+   * @see com.endpoint.lg.support.domain.Orientation
+   */
+  public void setOrientation(Orientation orientation) {
+    this.orientation = orientation;
+  }
+
+  /*
+   * Constructor for EarthViewSyncState
+   * 
+   * @param viewsyncData - udp packet from ROS
+   */
+  public EarthViewSyncState(String viewsyncData) {
+
+    // http://code.google.com/p/liquid-galaxy/wiki/GoogleEarth_ViewSync
+    String[] viewsyncDataParsed = new String[10];
+    viewsyncDataParsed = viewsyncData.split("\\,");
+
+    double counter = Double.parseDouble(viewsyncDataParsed[0]);
+    double latitude = Double.parseDouble(viewsyncDataParsed[1]);
+    double longitude = Double.parseDouble(viewsyncDataParsed[2]);
+    double altitude = Double.parseDouble(viewsyncDataParsed[3]);
+    double heading = Double.parseDouble(viewsyncDataParsed[4]);
+    double tilt = Double.parseDouble(viewsyncDataParsed[5]);
+    double roll = Double.parseDouble(viewsyncDataParsed[6]);
+    double timestart = Double.parseDouble(viewsyncDataParsed[7]);
+    double timeend = Double.parseDouble(viewsyncDataParsed[8]);
+    double range = 0; // we don't have range for Orientation object
+
+    // the planet portion of the comma-separated-values from Earth might be
+    // empty - need to account for that
+    if (viewsyncDataParsed.length > 9) {
+      String planet = viewsyncDataParsed[9];
+    } else {
+      String planet = "";
+    }
+
+    Location location = new Location(latitude, longitude, altitude);
+    Orientation orientation = new Orientation(heading, range, tilt, roll);
+
+    this.timestart = timestart;
+    this.timeend = timeend;
+    this.planet = planet;
+    this.counter = counter;
+    this.location = location;
+    this.orientation = orientation;
+
+  }
+
+  // TODO: deserialize an EarthViewSyncState that has arrived from Ros
+  /*
+   * Deserialize json that has arrived from ROS
+   */
+  public EarthViewSyncState(JsonNavigator json) {
+    location =
+        new Location(json.getDouble(MessageFields.MESSAGE_FIELD_LOCATION_LATITUDE).doubleValue(),
+            json.getDouble(MessageFields.MESSAGE_FIELD_LOCATION_LONGITUDE).doubleValue(), json
+                .getDouble(MessageFields.MESSAGE_FIELD_LOCATION_ALTITUDE).doubleValue());
+    orientation =
+        new Orientation(json.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_HEADING)
+            .doubleValue(), json.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_RANGE)
+            .doubleValue(), json.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_TILT)
+            .doubleValue(), json.getDouble(MessageFields.MESSAGE_FIELD_ORIENTATION_ROLL)
+            .doubleValue());
+    timestart = json.getDouble(MessageFields.MESSAGE_FIELD_TIMESTART).doubleValue();
+    timeend = json.getDouble(MessageFields.MESSAGE_FIELD_TIMEEND).doubleValue();
+    planet = json.getString(MessageFields.MESSAGE_FIELD_PLANET);
+    counter = json.getDouble(MessageFields.MESSAGE_FIELD_COUNTER).doubleValue();
+  }
+
+  /*
+   * Serialize a JsonBuilder from EarthViewSyncState instance
+   */
+  public JsonBuilder getJsonBuilder() {
+    // serialize a JsonBuilder from an EarthViewSyncState instance
+    JsonBuilder json = new JsonBuilder();
+
+    json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_HEADING, orientation.getHeading());
+    json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_RANGE, orientation.getRange());
+    json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_TILT, orientation.getTilt());
+    json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_ROLL, orientation.getRoll());
+    json.put(MessageFields.MESSAGE_FIELD_LOCATION_LATITUDE, location.getLatitude());
+    json.put(MessageFields.MESSAGE_FIELD_LOCATION_LONGITUDE, location.getLongitude());
+    json.put(MessageFields.MESSAGE_FIELD_LOCATION_ALTITUDE, location.getAltitude());
+    json.put(MessageFields.MESSAGE_FIELD_TIMEEND, timeend);
+    json.put(MessageFields.MESSAGE_FIELD_TIMESTART, timestart);
+    json.put(MessageFields.MESSAGE_FIELD_COUNTER, counter);
+    json.put(MessageFields.MESSAGE_FIELD_PLANET, planet);
+
+    return json;
+  }
+
+  /**
+   * Get a <code>Map</code> of the viewsync state.
+   * 
+   * @return map representation of the viewsync state
+   */
+  public Map<String, Object> getMap() {
+    return getJsonBuilder().build();
+  }
 }
