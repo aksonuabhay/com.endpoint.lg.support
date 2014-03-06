@@ -33,37 +33,37 @@ import com.endpoint.lg.support.message.MessageFields;
  */
 
 public class EarthViewSyncState {
-  /*
+  /**
    * The orientation: heading, tilt, roll, (range)
    */
   private Orientation orientation;
 
-  /*
+  /**
    * The location: lattitude, longitude, altitude
    */
   private Location location;
 
-  /*
+  /**
    * The planet: "sky", "mars", "moon", empty "" is Earth
    */
   private String planet;
 
-  /*
+  /**
    * The timestart
    */
   private Double timestart;
 
-  /*
+  /**
    * The timeend
    */
   private Double timeend;
 
-  /*
+  /**
    * The counter
    */
   private Double counter;
 
-  /*
+  /**
    * Getter for counter
    * 
    * @return counter
@@ -72,7 +72,7 @@ public class EarthViewSyncState {
     return counter;
   }
 
-  /*
+  /**
    * Planet getter
    * 
    * @return planet
@@ -81,7 +81,7 @@ public class EarthViewSyncState {
     return planet;
   }
 
-  /*
+  /**
    * Getter for time start
    * 
    * @return timestart
@@ -90,7 +90,7 @@ public class EarthViewSyncState {
     return timestart;
   }
 
-  /*
+  /**
    * Getter for time end
    * 
    * @return timeend
@@ -99,7 +99,7 @@ public class EarthViewSyncState {
     return timeend;
   }
 
-  /*
+  /**
    * Getter for Location
    * 
    * @return Location
@@ -110,7 +110,7 @@ public class EarthViewSyncState {
     return location;
   }
 
-  /*
+  /**
    * Getter for Orientation
    * 
    * @return Orientation
@@ -121,7 +121,7 @@ public class EarthViewSyncState {
     return orientation;
   }
 
-  /*
+  /**
    * Setter for Location
    * 
    * @see com.endpoint.lg.support.domain.Location
@@ -130,7 +130,7 @@ public class EarthViewSyncState {
     this.location = location;
   }
 
-  /*
+  /**
    * Setter for Orientation
    * 
    * @see com.endpoint.lg.support.domain.Orientation
@@ -139,7 +139,7 @@ public class EarthViewSyncState {
     this.orientation = orientation;
   }
 
-  /*
+  /**
    * Constructor for EarthViewSyncState
    * 
    * @param viewsyncData - udp packet from ROS
@@ -182,7 +182,7 @@ public class EarthViewSyncState {
   }
 
   // TODO: deserialize an EarthViewSyncState that has arrived from Ros
-  /*
+  /**
    * Deserialize json that has arrived from ROS
    */
   public EarthViewSyncState(JsonNavigator json) {
@@ -202,7 +202,7 @@ public class EarthViewSyncState {
     counter = json.getDouble(MessageFields.MESSAGE_FIELD_COUNTER).doubleValue();
   }
 
-  /*
+  /**
    * Serialize a JsonBuilder from EarthViewSyncState instance
    */
   public JsonBuilder getJsonBuilder() {
