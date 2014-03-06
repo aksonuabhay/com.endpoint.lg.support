@@ -19,6 +19,8 @@ package com.endpoint.lg.support.viewsync;
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
 
+import java.util.Map;
+
 import com.endpoint.lg.support.domain.Location;
 import com.endpoint.lg.support.domain.Orientation;
 import com.endpoint.lg.support.message.MessageFields;
@@ -207,5 +209,14 @@ public class EarthViewSyncState {
 	    json.put(MessageFields.MESSAGE_FIELD_PLANET, planet);
 	    
 	    return json;
-	}	
+	}
+
+	/**
+	 * Get a <code>Map</code> of the viewsync state.
+	 * 
+	 * @return map representation of the viewsync state
+	 */
+	public Map<String, Object> getMap() {
+	  return getJsonBuilder().build();
+	}
 }
