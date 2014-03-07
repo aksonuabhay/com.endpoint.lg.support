@@ -220,6 +220,25 @@ public class ManagedWindow implements ManagedResource {
         .toString());
   }
 
+  // TODO: merge this BROAD search into buildSearchArgs()
+  private List<String> buildBroadSearchArgs(WindowIdentity id) {
+    List<String> args = Lists.newArrayList("search", "--sync", "--any", "--name", "--class", "--classname" );
+
+    String identifier = id.getIdentifier();
+    args.addAll(Lists.newArrayList(identifier));
+
+    return args;
+  }
+
+  // TODO: merge this little ditty into buildArgs()
+  private List<String> buildActiveArgs(boolean active) {
+    if ( active == true ) {
+      return Lists.newArrayList("windowactivate", "windowfocus");
+    } else {
+      return Lists.newArrayList("windowminimize");
+    }
+  }
+
   /**
    * Positions the window.
    */
@@ -246,6 +265,35 @@ public class ManagedWindow implements ManagedResource {
         xdoCommand.addAll(buildSearchArgs(identity));
         xdoCommand.addAll(buildMoveArgs(finalGeometry));
         xdoCommand.addAll(buildSizeArgs(finalGeometry));
+
+        commands.add(xdoCommand);
+        exec.executeCommands(commands);
+      }
+    });
+  }
+
+  /**
+   * Make window active or inactive(minimized)
+   */
+  private void makeActive(boolean active) {
+    if (!checkPlatformSupport()) {
+      activity.getLog().warn(MSG_NOT_IMPLEMENTED);
+      return;
+    }
+
+    final boolean activeBool = active;
+
+    ScheduledExecutorService executor = activity.getSpaceEnvironment().getExecutorService();
+
+    executor.execute(new Runnable() {
+      public void run() {
+        NativeCommandsExecutor exec = new NativeCommandsExecutor();
+
+        List<List<String>> commands = Lists.newArrayList();
+
+        List<String> xdoCommand = Lists.newArrayList(XDOTOOL_BIN);
+        xdoCommand.addAll(buildBroadSearchArgs(identity));
+        xdoCommand.addAll(buildActiveArgs(activeBool));
 
         commands.add(xdoCommand);
         exec.executeCommands(commands);
@@ -299,5 +347,19 @@ public class ManagedWindow implements ManagedResource {
    */
   public void update() {
     positionWindow();
+  }
+
+  /**
+   * Activates ALL client windows for a given windowId
+   */
+  public void activate() {
+    makeActive(true);
+  }
+
+  /**
+   * Dectivates ALL client windows for a given windowId
+   */
+  public void deactivate() {
+    makeActive(false);
   }
 }
