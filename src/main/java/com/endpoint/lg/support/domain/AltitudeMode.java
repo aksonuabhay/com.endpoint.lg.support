@@ -21,6 +21,26 @@ package com.endpoint.lg.support.domain;
  */
 public enum AltitudeMode {
   /**
+   * Altitude is absolute.
+   */
+  ABSOLUTE("absolute"),
+
+  /**
+   * Altitude is clamped to ground.
+   */
+  CLAMP_TO_GROUND("clampToGround"),
+
+  /**
+   * Altitude is clamped to sea floor.
+   */
+  CLAMP_TO_SEA_FLOOR("clampToSeaFloor"),
+
+  /**
+   * Altitude is relative to ground.
+   */
+  RELATIVE_TO_GROUND("relativeToGround"),
+
+  /**
    * Altitude is relative to the sea floor.
    */
   RELATIVE_TO_SEA_FLOOR("relativeToSeaFloor");
@@ -36,7 +56,7 @@ public enum AltitudeMode {
 
   /**
    * get the value for the string to be used.
-   *
+   * 
    * @return the value
    */
   public String getValue() {
