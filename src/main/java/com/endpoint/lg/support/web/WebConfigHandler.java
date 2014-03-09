@@ -52,6 +52,16 @@ import java.io.IOException;
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class WebConfigHandler implements HttpDynamicRequestHandler {
+  /**
+   * Name of the Interactive Spaces JavaScript global object.
+   */
+  public static final String JS_GLOBAL_OBJECT = "IS";
+
+  /**
+   * Name of the configuration object under the global object.
+   */
+  public static final String JS_CONFIGURATION_OBJECT = "Configuration";
+
   private static JsonMapper mapper = new JsonMapper();
 
   /**
@@ -77,9 +87,8 @@ public class WebConfigHandler implements HttpDynamicRequestHandler {
    */
   public void updateConfig(Configuration config) {
     String json = mapper.toString(config.getCollapsedMap());
-    
-    configResponse =
-        String.format("var IS = IS || {}; IS.Configuration = %s;", json).getBytes();
+
+    configResponse = String.format("var %1$s = %1$s || {}; %1$s.%2$s = %3$s;", JS_GLOBAL_OBJECT, JS_CONFIGURATION_OBJECT, json).getBytes();
   }
 
   /**
