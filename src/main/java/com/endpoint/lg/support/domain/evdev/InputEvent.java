@@ -70,18 +70,18 @@ public class InputEvent {
    * The event type. Though this is an unsigned short in the kernel struct, we
    * use an int.
    */
-  private int type;
+  protected int type;
 
   /**
    * The event code. Though this is an unsigned short in the kernel struct, we
    * use an int.
    */
-  private int code;
+  protected int code;
 
   /**
    * The event value.
    */
-  private int value;
+  protected int value;
 
   public int getType() {
     return type;
