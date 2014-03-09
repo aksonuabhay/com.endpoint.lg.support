@@ -18,11 +18,11 @@ package com.endpoint.lg.support.test.web;
 
 import interactivespaces.configuration.Configuration;
 import interactivespaces.configuration.SimpleConfiguration;
+import interactivespaces.evaluation.ExpressionEvaluator;
+import interactivespaces.evaluation.SimpleEvaluationEnvironment;
 import interactivespaces.evaluation.SimpleExpressionEvaluator;
 import interactivespaces.service.web.server.internal.netty.NettyWebServer;
 import interactivespaces.service.web.server.WebServer;
-import interactivespaces.util.data.json.JsonMapper;
-import interactivespaces.util.data.json.JsonNavigator;
 
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Context;
@@ -35,7 +35,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.ros.concurrent.DefaultScheduledExecutorService;
 
-import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,6 +46,9 @@ import java.net.MalformedURLException;
 /**
  * Test the HTTP dynamic configuration handler.
  * 
+ * TODO: Remove the WebServer components and properly mock HttpRequest and
+ * HttpResponse.
+ * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class TestWebConfigHandler {
@@ -54,10 +56,32 @@ public class TestWebConfigHandler {
   public static final int WEB_SERVER_PORT = 20202;
   public static final String HANDLER_PATH = "handler.js";
 
-  private static JsonMapper mapper;
+  public static final String KEY_STRING = "string";
+  public static final String KEY_QUOTED_STRING = "string.quoted";
+  public static final String KEY_TEMPLATE_STRING = "string.templated";
+
+  public static final String VALUE_STRING = "foo";
+  public static final String VALUE_QUOTED_STRING = "\"Lorem ipsum dolor 'mutt.'\"";
+  public static final String VALUE_TEMPLATE_STRING = String.format("${%s} bar", KEY_STRING);
+  public static final String EXPECTED_TEMPLATE_STRING = String.format("%s bar", VALUE_STRING);
+
+  private static Configuration config;
   private static WebServer server;
   private static URL url;
-  private static Map<String, Object> expected;
+
+  /**
+   * A mock evaluator, so we don't have to build the live activity stack.
+   */
+  private static class MockExpressionEvaluator extends SimpleExpressionEvaluator {
+    @Override
+    public String evaluateStringExpression(String initial) {
+      if (initial.equals(VALUE_TEMPLATE_STRING)) {
+        return EXPECTED_TEMPLATE_STRING;
+      } else {
+        return initial;
+      }
+    }
+  }
 
   @BeforeClass
   public static void testSetup() {
@@ -66,30 +90,43 @@ public class TestWebConfigHandler {
 
     server = new NettyWebServer(TEST_NAME, WEB_SERVER_PORT, executorSvc, log);
 
-    Configuration config = new SimpleConfiguration(new SimpleExpressionEvaluator());
+    ExpressionEvaluator evaluator = new MockExpressionEvaluator();
+    evaluator.setEvaluationEnvironment(new SimpleEvaluationEnvironment());
 
-    config.setValue("foo", "bar");
-    config.setValue("bim.bap", "boo");
-    config.setValue("blam.a.lam.number", "0");
-    config.setValue("null.a.lull", null);
+    config = new SimpleConfiguration(evaluator);
+
+    config.setValue(KEY_STRING, VALUE_STRING);
+    config.setValue(KEY_QUOTED_STRING, VALUE_QUOTED_STRING);
+    config.setValue(KEY_TEMPLATE_STRING, VALUE_TEMPLATE_STRING);
 
     WebConfigHandler handler = new WebConfigHandler(config);
     server.addDynamicContentHandler(HANDLER_PATH, false, handler);
 
-    expected = new JsonNavigator(config.getCollapsedMap()).getRoot();
-
-    mapper = new JsonMapper();
-
     server.startup();
   }
 
+  /**
+   * Pulls a String out of the given JavaScript scope.
+   */
+  public static String getResultString(Context context, ScriptableObject scope, String key) {
+    context.evaluateString(scope, String.format("_result = %s.%s['%s'];",
+        WebConfigHandler.JS_GLOBAL_OBJECT, WebConfigHandler.JS_CONFIGURATION_OBJECT, key),
+        TEST_NAME, 1, null);
+
+    Object result = scope.get("_result", scope);
+
+    return result.toString();
+  }
+
+  /**
+   * Tests many requests to the handler.
+   */
   @Test
-  public void test() {
+  public void testRequests() {
     HttpURLConnection connection = null;
     BufferedReader reader = null;
     String line = null;
     StringBuilder response;
-    Map<String, Object> evaluated;
 
     try {
       url = new URL("http://localhost:" + WEB_SERVER_PORT + "/" + HANDLER_PATH);
@@ -97,7 +134,7 @@ public class TestWebConfigHandler {
       fail("Fix your URL: " + e.getMessage());
     }
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 100; i++) {
       response = new StringBuilder();
 
       // Open a connection.
@@ -106,7 +143,7 @@ public class TestWebConfigHandler {
       } catch (IOException e) {
         fail("IOException during connection: " + e.getMessage());
       }
-      
+
       // Verify the HTTP response code.
       try {
         assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
@@ -141,18 +178,17 @@ public class TestWebConfigHandler {
       ScriptableObject scope = context.initStandardObjects();
 
       context.evaluateString(scope, response.toString(), TEST_NAME, 1, null);
-      context.evaluateString(scope, String.format("_result = JSON.stringify(%s.%s);",
-          WebConfigHandler.JS_GLOBAL_OBJECT, WebConfigHandler.JS_CONFIGURATION_OBJECT), TEST_NAME,
-          1, null);
 
-      Object result = scope.get("_result", scope);
+      assertEquals(config.getPropertyString(KEY_STRING),
+          getResultString(context, scope, KEY_STRING));
 
-      evaluated = mapper.parseObject(Context.toString(result));
-      
+      assertEquals(config.getPropertyString(KEY_QUOTED_STRING),
+          getResultString(context, scope, KEY_QUOTED_STRING));
+
+      assertEquals(config.getPropertyString(KEY_TEMPLATE_STRING),
+          getResultString(context, scope, KEY_TEMPLATE_STRING));
+
       Context.exit();
-
-      // Compare the evaluated JavaScript against the Configuration Map.
-      assertEquals(expected, evaluated);
     }
   }
 

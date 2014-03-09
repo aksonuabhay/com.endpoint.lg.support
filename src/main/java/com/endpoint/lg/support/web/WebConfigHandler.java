@@ -22,8 +22,10 @@ import interactivespaces.service.web.server.HttpRequest;
 import interactivespaces.service.web.server.HttpResponse;
 import interactivespaces.util.data.json.JsonMapper;
 import interactivespaces.configuration.Configuration;
+import interactivespaces.evaluation.ExpressionEvaluator;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * An HTTP request handler which serves a <code>Configuration</code> as a
@@ -86,9 +88,18 @@ public class WebConfigHandler implements HttpDynamicRequestHandler {
    *          the configuration to serve
    */
   public void updateConfig(Configuration config) {
-    String json = mapper.toString(config.getCollapsedMap());
+    Map<String, String> configMap = config.getCollapsedMap();
+    ExpressionEvaluator evaluator = config.getExpressionEvaluator();
 
-    configResponse = String.format("var %1$s = %1$s || {}; %1$s.%2$s = %3$s;", JS_GLOBAL_OBJECT, JS_CONFIGURATION_OBJECT, json).getBytes();
+    for (String key : configMap.keySet()) {
+      configMap.put(key, evaluator.evaluateStringExpression(configMap.get(key)));
+    }
+
+    String json = mapper.toString(configMap);
+
+    configResponse =
+        String.format("var %1$s = %1$s || {}; %1$s.%2$s = %3$s;", JS_GLOBAL_OBJECT,
+            JS_CONFIGURATION_OBJECT, json).getBytes();
   }
 
   /**
