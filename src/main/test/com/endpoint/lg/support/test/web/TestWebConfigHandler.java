@@ -24,6 +24,8 @@ import interactivespaces.evaluation.SimpleExpressionEvaluator;
 import interactivespaces.service.web.server.internal.netty.NettyWebServer;
 import interactivespaces.service.web.server.WebServer;
 
+import org.mozilla.javascript.EvaluatorException;
+
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Context;
 import com.endpoint.lg.support.web.WebConfigHandler;
@@ -108,10 +110,14 @@ public class TestWebConfigHandler {
   /**
    * Pulls a String out of the given JavaScript scope.
    */
-  public static String getResultString(Context context, ScriptableObject scope, String key) {
-    context.evaluateString(scope, String.format("_result = %s.%s['%s'];",
-        WebConfigHandler.JS_GLOBAL_OBJECT, WebConfigHandler.JS_CONFIGURATION_OBJECT, key),
-        TEST_NAME, 1, null);
+  public static String getResultString(Context context, ScriptableObject scope, String key)
+      throws EvaluatorException {
+
+    String expr =
+        String.format("_result = %s.%s['%s'];", WebConfigHandler.JS_GLOBAL_OBJECT,
+            WebConfigHandler.JS_CONFIGURATION_OBJECT, key);
+
+    context.evaluateString(scope, expr, key, 1, null);
 
     Object result = scope.get("_result", scope);
 
@@ -177,18 +183,23 @@ public class TestWebConfigHandler {
       Context context = Context.enter();
       ScriptableObject scope = context.initStandardObjects();
 
-      context.evaluateString(scope, response.toString(), TEST_NAME, 1, null);
+      try {
+        context.evaluateString(scope, response.toString(), "response", 1, null);
 
-      assertEquals(config.getPropertyString(KEY_STRING),
-          getResultString(context, scope, KEY_STRING));
+        assertEquals(config.getPropertyString(KEY_STRING),
+            getResultString(context, scope, KEY_STRING));
 
-      assertEquals(config.getPropertyString(KEY_QUOTED_STRING),
-          getResultString(context, scope, KEY_QUOTED_STRING));
+        assertEquals(config.getPropertyString(KEY_QUOTED_STRING),
+            getResultString(context, scope, KEY_QUOTED_STRING));
 
-      assertEquals(config.getPropertyString(KEY_TEMPLATE_STRING),
-          getResultString(context, scope, KEY_TEMPLATE_STRING));
+        assertEquals(config.getPropertyString(KEY_TEMPLATE_STRING),
+            getResultString(context, scope, KEY_TEMPLATE_STRING));
 
-      Context.exit();
+      } catch (EvaluatorException e) {
+        fail("Failed to evaluate JavaScript: " + e.getMessage());
+      } finally {
+        Context.exit();
+      }
     }
   }
 
