@@ -29,26 +29,26 @@ import java.util.Map;
  * An example using anonymous classes would be
  * 
  * <pre>
- * <code>
+ * {@code
  * handlers.registerHandler(InputEvent.Types.EV_KEY, InputEvent.Codes.BTN_0, new InputEventHandler() {
  *   public void handleEvent(InputEvent event)  {
  *     // Do something with event
  *   }
  * });
- * </code>
+ * }
  * </pre>
  * 
  * <p>
  * An example of registering all codes for a type (EV_ABS) would be
  * 
  * <pre>
- * <code>
+ * {@code
  * handlers.registerHandler(InputEvent.Types.EV_ABS, InputEventHandlers.ALL_CODES, new InputEventHandler() {
  *   public void handleEvent(InputEvent event)  {
  *     // Do something with event
  *   }
  * });
- * </code>
+ * }
  * </pre>
  * 
  * <p>
