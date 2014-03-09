@@ -14,11 +14,10 @@
  * under the License.
  */
 
-package com.endpoint.lg.support.domain.evdev;
-
-import com.endpoint.lg.support.domain.evdev.InputEventHandler;
+package com.endpoint.lg.support.evdev;
 
 import com.google.common.collect.Maps;
+
 import java.util.Map;
 
 /**

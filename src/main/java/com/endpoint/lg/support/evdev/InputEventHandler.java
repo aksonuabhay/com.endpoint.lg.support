@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.endpoint.lg.support.domain.evdev;
+package com.endpoint.lg.support.evdev;
 
 /**
  * A handler for <code>InputEvent</code>s.

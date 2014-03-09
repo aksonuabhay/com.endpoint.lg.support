@@ -14,9 +14,7 @@
  * the License.
  */
 
-package com.endpoint.lg.support.domain.evdev;
-
-import com.endpoint.lg.support.domain.evdev.InputEvent;
+package com.endpoint.lg.support.evdev;
 
 /**
  * A helper for tracking the state of evdev absolute axes and keys/buttons.
@@ -33,7 +31,7 @@ public class InputDeviceState {
    * <code>flushRel()</code> should be called after reading all desired values.
    * 
    * @param code
-   *          from <code>InputEvent.Codes</code>
+   *          from <code>EventCodes</code>
    * @return last known axis value (cumulative)
    */
   public int getRel(int code) {
@@ -44,7 +42,7 @@ public class InputDeviceState {
    * Getter for EV_ABS codes.
    * 
    * @param code
-   *          from <code>InputEvent.Codes</code>
+   *          from <code>EventCodes</code>
    * @return last known axis value
    */
   public int getAbs(int code) {
@@ -55,7 +53,7 @@ public class InputDeviceState {
    * Getter for EV_KEY codes.
    * 
    * @param code
-   *          from <code>InputEvent.Codes</code>
+   *          from <code>EventCodes</code>
    * @return last known key/button value
    */
   public int getKey(int code) {
@@ -74,18 +72,18 @@ public class InputDeviceState {
    * Initializes state arrays.
    */
   public InputDeviceState() {
-    rel = new int[InputEvent.Codes.REL_CNT];
-    abs = new int[InputEvent.Codes.ABS_CNT];
-    key = new int[InputEvent.Codes.KEY_CNT];
+    rel = new int[EventCodes.REL_CNT];
+    abs = new int[EventCodes.ABS_CNT];
+    key = new int[EventCodes.KEY_CNT];
   }
 
   /**
    * Updates the internal state from an incoming <code>InputEvent</code>.
    */
   public void update(InputEvent event) {
-    if (event.getType() == InputEvent.Types.EV_ABS) {
+    if (event.getType() == EventTypes.EV_ABS) {
       abs[event.getCode()] = event.getValue();
-    } else if (event.getType() == InputEvent.Types.EV_KEY) {
+    } else if (event.getType() == EventTypes.EV_KEY) {
       key[event.getCode()] = event.getValue();
     }
   }
