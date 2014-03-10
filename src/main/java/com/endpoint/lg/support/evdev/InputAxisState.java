@@ -29,6 +29,10 @@ public abstract class InputAxisState {
   protected int values[];
   protected boolean dirty[];
 
+  public int getType() {
+    return type;
+  }
+
   /**
    * Creates an InputAxisState with the given type and number of axes.
    * 
@@ -84,7 +88,7 @@ public abstract class InputAxisState {
    * @return true if the state changed
    */
   public boolean update(InputEvent event) {
-    if (event.getType() == type) {
+    if (event.getType() == getType()) {
       return setValue(event.getCode(), event.getValue());
     }
 

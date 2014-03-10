@@ -28,4 +28,20 @@ public class InputRelState extends InputAxisState {
   public InputRelState() {
     super(EventTypes.EV_REL, EventCodes.REL_CNT);
   }
+
+  /**
+   * Update this state from an incoming event. Values are cumulative.
+   * 
+   * @param event
+   *          an input event
+   * @return true if the state changed
+   */
+  @Override
+  public boolean update(InputEvent event) {
+    if (event.getType() == getType()) {
+      return setValue(event.getCode(), event.getValue() + getValue(event.getCode()));
+    }
+
+    return false;
+  }
 }
