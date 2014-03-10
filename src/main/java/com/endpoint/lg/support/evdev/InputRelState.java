@@ -16,6 +16,8 @@
 
 package com.endpoint.lg.support.evdev;
 
+import interactivespaces.util.data.json.JsonNavigator;
+
 /**
  * Model for the current EV_REL state of an input device.
  * 
@@ -27,6 +29,17 @@ public class InputRelState extends InputAxisState {
    */
   public InputRelState() {
     super(InputEventTypes.EV_REL, InputEventCodes.REL_CNT);
+  }
+
+  /**
+   * Creates an InputAxisState from a JSON message.
+   * 
+   * @param json
+   *          message with axis values
+   */
+  public InputRelState(JsonNavigator json) {
+    super(InputEventTypes.EV_REL, InputEventCodes.REL_CNT);
+    update(json);
   }
 
   /**

@@ -17,6 +17,7 @@
 package com.endpoint.lg.support.evdev;
 
 import interactivespaces.util.data.json.JsonBuilder;
+import interactivespaces.util.data.json.JsonNavigator;
 
 /**
  * Model for the current EV_ABS state of an input device.
@@ -29,6 +30,17 @@ public class InputAbsState extends InputAxisState {
    */
   public InputAbsState() {
     super(InputEventTypes.EV_ABS, InputEventCodes.ABS_CNT);
+  }
+
+  /**
+   * Creates an InputAxisState from a JSON message.
+   * 
+   * @param json
+   *          message with axis values
+   */
+  public InputAbsState(JsonNavigator json) {
+    super(InputEventTypes.EV_ABS, InputEventCodes.ABS_CNT);
+    update(json);
   }
 
   /**
