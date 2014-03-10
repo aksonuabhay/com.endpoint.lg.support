@@ -37,7 +37,7 @@ public class InputKeyEvent extends InputEvent {
    *          key event code
    */
   public InputKeyEvent(int code, int value) {
-    super(EventTypes.EV_KEY, code, value);
+    super(InputEventTypes.EV_KEY, code, value);
   }
 
   /**
@@ -47,7 +47,7 @@ public class InputKeyEvent extends InputEvent {
    *          event data
    */
   public InputKeyEvent(InputEvent event) {
-    super(EventTypes.EV_KEY, event.getCode(), event.getValue());
+    super(InputEventTypes.EV_KEY, event.getCode(), event.getValue());
   }
 
   /**
@@ -58,7 +58,7 @@ public class InputKeyEvent extends InputEvent {
    *          event data
    */
   public InputKeyEvent(JsonNavigator json) {
-    super(EventTypes.EV_KEY, json.getInteger(InputEvent.FIELD_CODE), json
+    super(InputEventTypes.EV_KEY, json.getInteger(InputEvent.FIELD_CODE), json
         .getInteger(InputEvent.FIELD_VALUE));
   }
 

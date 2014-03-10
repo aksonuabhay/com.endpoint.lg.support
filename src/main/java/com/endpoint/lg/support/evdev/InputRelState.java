@@ -26,7 +26,7 @@ public class InputRelState extends InputAxisState {
    * Make an <code>InputAbsState</code> for EV_REL.
    */
   public InputRelState() {
-    super(EventTypes.EV_REL, EventCodes.REL_CNT);
+    super(InputEventTypes.EV_REL, InputEventCodes.REL_CNT);
   }
 
   /**

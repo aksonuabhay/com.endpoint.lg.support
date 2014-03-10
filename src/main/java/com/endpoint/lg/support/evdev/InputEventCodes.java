@@ -21,7 +21,7 @@ package com.endpoint.lg.support.evdev;
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class EventCodes {
+public class InputEventCodes {
   // to convert from input.h:
   // #define ([A-Z0-9_]*) *([^\/\n ]*)
   // public static final int \1 = \2;

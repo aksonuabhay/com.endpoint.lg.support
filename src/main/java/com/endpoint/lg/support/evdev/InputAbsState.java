@@ -28,7 +28,7 @@ public class InputAbsState extends InputAxisState {
    * Make an <code>InputAbsState</code> for EV_ABS.
    */
   public InputAbsState() {
-    super(EventTypes.EV_ABS, EventCodes.ABS_CNT);
+    super(InputEventTypes.EV_ABS, InputEventCodes.ABS_CNT);
   }
 
   /**
