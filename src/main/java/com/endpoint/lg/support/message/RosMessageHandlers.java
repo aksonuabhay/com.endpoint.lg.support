@@ -62,6 +62,10 @@ public class RosMessageHandlers {
   public RosMessageHandlers(Log log) {
     this.log = log;
   }
+  
+  protected Log getLog() {
+    return log;
+  }
 
   /**
    * Register a handler.

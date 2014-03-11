@@ -75,6 +75,10 @@ public class WebsocketMessageHandlers {
   public WebsocketMessageHandlers(Log log) {
     this.log = log;
   }
+  
+  protected Log getLog() {
+    return log;
+  }
 
   /**
    * Register a handler.
