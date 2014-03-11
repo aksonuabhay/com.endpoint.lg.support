@@ -35,31 +35,43 @@ import com.endpoint.lg.support.domain.streetview.StreetviewPano;
 public class TestStreetviewPano {
   private static final String TEST_PANOID = "HALqEVwg85r1nYVO65yq9w";
   private static final String OTHER_PANOID = "zk8W4zc2LnxaC1hMOxrczQ";
-  
+
   private static StreetviewPano pano;
-  
+
   @BeforeClass
   public static void setup() {
     pano = new StreetviewPano(TEST_PANOID);
   }
-  
+
+  /**
+   * Test read access.
+   */
   @Test
-  public void testGetPano() {
+  public void testGetter() {
     assertEquals(TEST_PANOID, pano.getPanoid());
   }
 
+  /**
+   * Test equality method.
+   */
   @Test
   public void testEquality() {
     StreetviewPano same = new StreetviewPano(TEST_PANOID);
     StreetviewPano different = new StreetviewPano(OTHER_PANOID);
-    
+
     assertTrue(pano.equals(same));
-    assertEquals(pano.getPanoid(), same.getPanoid());
-    
+    assertTrue(same.equals(pano));
+
     assertFalse(pano.equals(different));
-    assertFalse(pano.getPanoid() == different.getPanoid());
+    assertFalse(different.equals(pano));
+
+    assertFalse(same.equals(different));
+    assertFalse(different.equals(same));
   }
-  
+
+  /**
+   * Test serialization and deserialization.
+   */
   @Test
   public void testSerialization() {
     JsonBuilder deserialized = pano.getJsonBuilder();
