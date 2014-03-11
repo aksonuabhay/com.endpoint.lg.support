@@ -32,78 +32,109 @@ import org.junit.Test;
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class TestStreetviewLinks {
-  private static StreetviewLinks emptyLinks;
-  private static StreetviewLinks testLinks;
-  private static double[] expected;
+  private final static String[] TEST_NAMES = { "at_1", "at_60", "at_178" };
+  private final static double[] TEST_ANGLES = { 1, 60, 178 };
+  private final static double[] EXPECTED = { 1, 1, 1, 1, 60, 60, 60, 60, 60, 60, 60, 60, 178, 178, 178,
+      178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+  private static JsonBuilder testBuilder;
+  private static JsonNavigator testMessage;
 
   @BeforeClass
-  public static void testSetup() {
-    JsonBuilder testBuilder = new JsonBuilder();
+  public static void setupMessage() {
+    testBuilder = new JsonBuilder();
     JsonBuilder testArray = testBuilder.newArray(StreetviewLinks.FIELD_LINKS);
 
-    testArray.put(new StreetviewLink("at_1", 1).getMap());
-    testArray.put(new StreetviewLink("at_60", 60).getMap());
-    testArray.put(new StreetviewLink("at_178", 178).getMap());
+    for (int i = 0; i < TEST_NAMES.length; i++) {
+      testArray.put(new StreetviewLink(TEST_NAMES[i], TEST_ANGLES[i]).getMap());
+    }
 
-    testLinks = new StreetviewLinks(new JsonNavigator(testBuilder.build()));
-
-    emptyLinks = new StreetviewLinks();
-
-    expected =
-        new double[] { 1, 1, 1, 1, 60, 60, 60, 60, 60, 60, 60, 60, 178, 178, 178, 178, 178, 178,
-            178, 178, 178, 178, 178, 178, 178, 178, 178, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+    testMessage = new JsonNavigator(testBuilder.build());
   }
 
+  /**
+   * Test emptiness.
+   */
   @Test
-  public void test() {
+  public void testEmpty() {
+    StreetviewLinks emptyLinks = new StreetviewLinks();
+
     assertFalse("Empty object has no links", emptyLinks.hasLinks());
 
-    assertTrue("Test object has links", testLinks.hasLinks());
+    assertNull("Empty object has no nearest link", emptyLinks.getNearestLink(0));
+    assertNull("Empty object has no furthest link", emptyLinks.getFurthestLink(0));
 
-    assertEquals(3, testLinks.getLinks().length);
+    assert (emptyLinks.getLinks().length == 0);
+  }
+
+  /**
+   * Test message deserialization.
+   */
+  @Test
+  public void testDeserialize() {
+    StreetviewLinks links = new StreetviewLinks(testMessage);
+
+    assertTrue("Deserialized object has links", links.hasLinks());
+
+    StreetviewLink linkArray[] = links.getLinks();
+
+    assert (TEST_NAMES.length == linkArray.length);
+
+    for (int i = 0; i < TEST_NAMES.length; i++) {
+      assertEquals(TEST_NAMES[i], linkArray[i].getPano());
+      assertEquals(TEST_ANGLES[i], linkArray[i].getHeading(), 0);
+    }
+  }
+
+  /**
+   * Test finding the nearest and furthest links relative to a heading.
+   */
+  @Test
+  public void testNearestAndFurthest() {
+    StreetviewLinks links = new StreetviewLinks(testMessage);
 
     double testHeading, front, behind;
 
     for (int i = 0; i < 36; i++) {
       testHeading = i * 10;
 
-      front = testLinks.getNearestLink(testHeading).getHeading();
-      behind = testLinks.getFurthestLink(testHeading).getHeading();
+      front = links.getNearestLink(testHeading).getHeading();
+      behind = links.getFurthestLink(testHeading).getHeading();
 
-      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
-      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[(i + 18) % 36], behind, 0);
 
       testHeading = i * 10 + 360.0;
 
-      front = testLinks.getNearestLink(testHeading).getHeading();
-      behind = testLinks.getFurthestLink(testHeading).getHeading();
+      front = links.getNearestLink(testHeading).getHeading();
+      behind = links.getFurthestLink(testHeading).getHeading();
 
-      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
-      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[(i + 18) % 36], behind, 0);
 
       testHeading = i * 10 + 720.0;
 
-      front = testLinks.getNearestLink(testHeading).getHeading();
-      behind = testLinks.getFurthestLink(testHeading).getHeading();
+      front = links.getNearestLink(testHeading).getHeading();
+      behind = links.getFurthestLink(testHeading).getHeading();
 
-      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
-      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[(i + 18) % 36], behind, 0);
 
       testHeading = i * 10 - 360.0;
 
-      front = testLinks.getNearestLink(testHeading).getHeading();
-      behind = testLinks.getFurthestLink(testHeading).getHeading();
+      front = links.getNearestLink(testHeading).getHeading();
+      behind = links.getFurthestLink(testHeading).getHeading();
 
-      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
-      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[(i + 18) % 36], behind, 0);
 
       testHeading = i * 10 - 720.0;
 
-      front = testLinks.getNearestLink(testHeading).getHeading();
-      behind = testLinks.getFurthestLink(testHeading).getHeading();
+      front = links.getNearestLink(testHeading).getHeading();
+      behind = links.getFurthestLink(testHeading).getHeading();
 
-      assertEquals(String.format("%.1f", testHeading), expected[i], front, 0);
-      assertEquals(String.format("%.1f", testHeading), expected[(i + 18) % 36], behind, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[i], front, 0);
+      assertEquals(String.format("%.1f", testHeading), EXPECTED[(i + 18) % 36], behind, 0);
     }
   }
 }
