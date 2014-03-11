@@ -20,12 +20,9 @@ import interactivespaces.SimpleInteractiveSpacesException;
 import interactivespaces.service.web.server.HttpDynamicRequestHandler;
 import interactivespaces.service.web.server.HttpRequest;
 import interactivespaces.service.web.server.HttpResponse;
-import interactivespaces.util.data.json.JsonMapper;
 import interactivespaces.configuration.Configuration;
-import interactivespaces.evaluation.ExpressionEvaluator;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * An HTTP request handler which serves a <code>Configuration</code> as a
@@ -55,18 +52,6 @@ import java.util.Map;
  */
 public class WebConfigHandler implements HttpDynamicRequestHandler {
   /**
-   * Name of the Interactive Spaces JavaScript global object.
-   */
-  public static final String JS_GLOBAL_OBJECT = "IS";
-
-  /**
-   * Name of the configuration object under the global object.
-   */
-  public static final String JS_CONFIGURATION_OBJECT = "Configuration";
-
-  private static JsonMapper mapper = new JsonMapper();
-
-  /**
    * The cached response.
    */
   private byte[] configResponse;
@@ -78,28 +63,7 @@ public class WebConfigHandler implements HttpDynamicRequestHandler {
    *          the configuration to serve
    */
   public WebConfigHandler(Configuration config) {
-    updateConfig(config);
-  }
-
-  /**
-   * Updates the handler's <code>Configuration</code>.
-   * 
-   * @param config
-   *          the configuration to serve
-   */
-  public void updateConfig(Configuration config) {
-    Map<String, String> configMap = config.getCollapsedMap();
-    ExpressionEvaluator evaluator = config.getExpressionEvaluator();
-
-    for (String key : configMap.keySet()) {
-      configMap.put(key, evaluator.evaluateStringExpression(configMap.get(key)));
-    }
-
-    String json = mapper.toString(configMap);
-
-    configResponse =
-        String.format("var %1$s = %1$s || {}; %1$s.%2$s = %3$s;", JS_GLOBAL_OBJECT,
-            JS_CONFIGURATION_OBJECT, json).getBytes();
+    configResponse = WebConfig.generate(config).getBytes();
   }
 
   /**
