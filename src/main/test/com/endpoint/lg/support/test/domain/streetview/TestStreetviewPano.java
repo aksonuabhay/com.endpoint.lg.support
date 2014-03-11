@@ -45,7 +45,7 @@ public class TestStreetviewPano {
   
   @Test
   public void testGetPano() {
-    assertEquals(pano.getPanoid(), TEST_PANOID);
+    assertEquals(TEST_PANOID, pano.getPanoid());
   }
 
   @Test

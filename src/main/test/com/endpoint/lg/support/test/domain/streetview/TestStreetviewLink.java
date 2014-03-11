@@ -49,8 +49,8 @@ public class TestStreetviewLink {
    */
   @Test
   public void testValues() {
-    assertEquals(link.getPano(), TEST_PANOID);
-    assertEquals(link.getHeading(), TEST_HEADING, 0);
+    assertEquals(TEST_PANOID, link.getPano());
+    assertEquals(TEST_HEADING, link.getHeading(), 0);
   }
 
   /**
