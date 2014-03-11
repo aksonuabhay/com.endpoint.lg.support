@@ -34,8 +34,8 @@ import org.junit.Test;
 public class TestStreetviewLinks {
   private final static String[] TEST_NAMES = { "at_1", "at_60", "at_178" };
   private final static double[] TEST_ANGLES = { 1, 60, 178 };
-  private final static double[] EXPECTED = { 1, 1, 1, 1, 60, 60, 60, 60, 60, 60, 60, 60, 178, 178, 178,
-      178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+  private final static double[] EXPECTED = { 1, 1, 1, 1, 60, 60, 60, 60, 60, 60, 60, 60, 178, 178,
+      178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
   private static JsonBuilder testBuilder;
   private static JsonNavigator testMessage;
@@ -64,7 +64,7 @@ public class TestStreetviewLinks {
     assertNull("Empty object has no nearest link", emptyLinks.getNearestLink(0));
     assertNull("Empty object has no furthest link", emptyLinks.getFurthestLink(0));
 
-    assert (emptyLinks.getLinks().length == 0);
+    assertTrue(emptyLinks.getLinks().length == 0);
   }
 
   /**
@@ -78,7 +78,7 @@ public class TestStreetviewLinks {
 
     StreetviewLink linkArray[] = links.getLinks();
 
-    assert (TEST_NAMES.length == linkArray.length);
+    assertTrue(TEST_NAMES.length == linkArray.length);
 
     for (int i = 0; i < TEST_NAMES.length; i++) {
       assertEquals(TEST_NAMES[i], linkArray[i].getPano());
