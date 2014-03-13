@@ -21,7 +21,7 @@ package com.endpoint.lg.support.window;
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class WindowGeometry {
+public class WindowGeometry implements XdotoolCommand {
   private Integer width;
   private Integer height;
   private Integer x;
@@ -57,6 +57,10 @@ public class WindowGeometry {
 
   public void setY(int y) {
     this.y = y;
+  }
+
+  public String getFlags() {
+    return String.format("windowmove %d %d windowsize %d %d", x, y, width, height);
   }
 
   /**

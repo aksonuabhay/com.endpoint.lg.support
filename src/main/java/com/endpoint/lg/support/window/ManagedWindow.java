@@ -16,23 +16,19 @@
 
 package com.endpoint.lg.support.window;
 
+import interactivespaces.activity.binary.NativeActivityRunner;
 import interactivespaces.activity.impl.BaseActivity;
 import interactivespaces.configuration.Configuration;
 import interactivespaces.configuration.SystemConfiguration;
-import interactivespaces.util.process.NativeCommandsExecutor;
 import interactivespaces.util.resource.ManagedResource;
-
-import com.google.common.collect.Lists;
-
-import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
+import interactivespaces.util.resource.ManagedResources;
 
 /**
  * Support class for placing windows within Space-configured viewports.
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class ManagedWindow implements ManagedResource {
+public class ManagedWindow extends ManagedResources implements ManagedResource {
   /**
    * Configuration key for viewport name.
    */
@@ -78,17 +74,19 @@ public class ManagedWindow implements ManagedResource {
    */
   public static final String CONFIG_KEY_VIEWPORT_Y = "lg.window.viewport.%s.y";
 
-  private static final String XDOTOOL_BIN = "/usr/bin/xdotool";
-  private static final String MSG_NOT_IMPLEMENTED =
-      "Window management not implemented for this platform";
   // TODO: these should be defined somewhere else
   private static final String PLATFORM_LINUX = "linux";
   private static final String PLATFORM_OSX = "osx";
 
   private BaseActivity activity;
+
   private WindowIdentity identity;
-  private WindowGeometry geometryOffset;
   private WindowGeometry finalGeometry;
+  private WindowGeometry geometryOffset;
+  private WindowVisibility visibility;
+
+  private WindowCommandRunnerFactory runnerFactory;
+  private NativeActivityRunner runner;
 
   /**
    * Ensures that window management is supported for this platform.
@@ -175,76 +173,11 @@ public class ManagedWindow implements ManagedResource {
   }
 
   /**
-   * Builds xdotool args for finding the X window id.
-   * 
-   * @param id
-   *          window identity, should be unique to the live activity's runner
-   * @return xdotool args
-   */
-  private List<String> buildSearchArgs(WindowIdentity id) {
-    List<String> args = Lists.newArrayList("search", "--maxdepth", "1", "--limit", "1", "--sync", "--onlyvisible");
-
-    String identifier = id.getIdentifier();
-
-    if (id.getType() == WindowIdentity.IdType.NAME) {
-      args.addAll(Lists.newArrayList("--name", identifier));
-    } else if (id.getType() == WindowIdentity.IdType.CLASS) {
-      args.addAll(Lists.newArrayList("--class", identifier));
-    } else if (id.getType() == WindowIdentity.IdType.INSTANCE) {
-      args.addAll(Lists.newArrayList("--classname", identifier));
-    }
-
-    return args;
-  }
-
-  /**
-   * Builds xdotool args for moving the window.
-   * 
-   * @param geometry
-   *          absolute window size
-   * @return xdotool args
-   */
-  private List<String> buildMoveArgs(WindowGeometry geometry) {
-    return Lists.newArrayList("windowmove", geometry.getX().toString(), geometry.getY().toString());
-  }
-
-  /**
-   * Builds xdotool args for resizing the window.
-   * 
-   * @param geometry
-   *          absolute window position
-   * @return xdotool args
-   */
-  private List<String> buildSizeArgs(WindowGeometry geometry) {
-    return Lists.newArrayList("windowsize", geometry.getWidth().toString(), geometry.getHeight()
-        .toString());
-  }
-
-  // TODO: merge this BROAD search into buildSearchArgs()
-  private List<String> buildBroadSearchArgs(WindowIdentity id) {
-    List<String> args = Lists.newArrayList("search", "--sync", "--any", "--name", "--class", "--classname" );
-
-    String identifier = id.getIdentifier();
-    args.addAll(Lists.newArrayList(identifier));
-
-    return args;
-  }
-
-  // TODO: merge this little ditty into buildArgs()
-  private List<String> buildActiveArgs(boolean active) {
-    if ( active == true ) {
-      return Lists.newArrayList("windowactivate", "windowfocus");
-    } else {
-      return Lists.newArrayList("windowminimize");
-    }
-  }
-
-  /**
-   * Positions the window.
+   * Positions the window, picking up any changes in configuration.
    */
   private void positionWindow() {
     if (!checkPlatformSupport()) {
-      activity.getLog().warn(MSG_NOT_IMPLEMENTED);
+      activity.getLog().warn("Window management not implemented for this platform");
       return;
     }
 
@@ -253,52 +186,37 @@ public class ManagedWindow implements ManagedResource {
     if (finalGeometry == null)
       return; // bypass when geometry could not be found
 
-    ScheduledExecutorService executor = activity.getSpaceEnvironment().getExecutorService();
+    if (runner != null)
+      runner.shutdown(); // only one xdotool process at a time
 
-    executor.execute(new Runnable() {
-      public void run() {
-        NativeCommandsExecutor exec = new NativeCommandsExecutor();
+    runner = runnerFactory.getCommand(identity, finalGeometry, visibility);
 
-        List<List<String>> commands = Lists.newArrayList();
+    runner.startup();
+  }
 
-        List<String> xdoCommand = Lists.newArrayList(XDOTOOL_BIN);
-        xdoCommand.addAll(buildSearchArgs(identity));
-        xdoCommand.addAll(buildMoveArgs(finalGeometry));
-        xdoCommand.addAll(buildSizeArgs(finalGeometry));
-
-        commands.add(xdoCommand);
-        exec.executeCommands(commands);
-      }
-    });
+  private void initRunnerFactory() {
+    runnerFactory =
+        new WindowCommandRunnerFactory(activity.getController().getNativeActivityRunnerFactory(),
+            activity.getLog());
   }
 
   /**
-   * Make window active or inactive(minimized)
+   * Constructs a ManagedWindow for the given activity.
+   * 
+   * @param activity
+   *          the activity responsible for the window
+   * @param identity
+   *          identifier for the window
    */
-  private void makeActive(boolean active) {
-    if (!checkPlatformSupport()) {
-      activity.getLog().warn(MSG_NOT_IMPLEMENTED);
-      return;
-    }
+  public ManagedWindow(BaseActivity activity, WindowIdentity identity) {
+    super(activity.getLog());
 
-    final boolean activeBool = active;
+    this.activity = activity;
+    this.identity = identity;
+    this.geometryOffset = new WindowGeometry(0, 0, 0, 0);
+    this.visibility = new WindowVisibility(false);
 
-    ScheduledExecutorService executor = activity.getSpaceEnvironment().getExecutorService();
-
-    executor.execute(new Runnable() {
-      public void run() {
-        NativeCommandsExecutor exec = new NativeCommandsExecutor();
-
-        List<List<String>> commands = Lists.newArrayList();
-
-        List<String> xdoCommand = Lists.newArrayList(XDOTOOL_BIN);
-        xdoCommand.addAll(buildBroadSearchArgs(identity));
-        xdoCommand.addAll(buildActiveArgs(activeBool));
-
-        commands.add(xdoCommand);
-        exec.executeCommands(commands);
-      }
-    });
+    initRunnerFactory();
   }
 
   /**
@@ -313,25 +231,22 @@ public class ManagedWindow implements ManagedResource {
    *          relative geometry within the configured viewport
    */
   public ManagedWindow(BaseActivity activity, WindowIdentity identity, WindowGeometry geometryOffset) {
+    super(activity.getLog());
+
     this.activity = activity;
     this.identity = identity;
     this.geometryOffset = geometryOffset;
+    this.visibility = new WindowVisibility(false);
+
+    initRunnerFactory();
   }
 
   /**
-   * Constructs a ManagedWindow for the given activity.
-   * 
-   * @param activity
-   *          the activity responsible for the window
-   * @param identity
-   *          identifier for the window
+   * Spin down any outstanding window placement commands.
    */
-  public ManagedWindow(BaseActivity activity, WindowIdentity identity) {
-    this(activity, identity, new WindowGeometry(0, 0, 0, 0));
-  }
-
   @Override
   public void shutdown() {
+    shutdownResources();
   }
 
   /**
@@ -343,23 +258,17 @@ public class ManagedWindow implements ManagedResource {
   }
 
   /**
-   * Updates the window positioning, picking up changes in configuration.
+   * Sync the window, causing a startup if not already started.
    */
   public void update() {
-    positionWindow();
+    startup();
   }
 
   /**
-   * Activates ALL client windows for a given windowId
+   * Changes window visibility.
    */
-  public void activate() {
-    makeActive(true);
-  }
-
-  /**
-   * Dectivates ALL client windows for a given windowId
-   */
-  public void deactivate() {
-    makeActive(false);
+  public void setVisible(boolean visible) {
+    visibility = new WindowVisibility(visible);
+    update();
   }
 }

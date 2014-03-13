@@ -21,14 +21,20 @@ package com.endpoint.lg.support.window;
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public abstract class WindowIdentity {
+public abstract class WindowIdentity implements XdotoolCommand {
   public enum IdType {
     NAME, CLASS, INSTANCE
   };
 
+  protected static final String COMMON_FLAGS = "search --maxdepth 1 --limit 1 --sync";
+  protected static final String MATCH_ALL = "--all --name --class --classname";
+  protected static final String MATCH_NAME = "--name";
+  protected static final String MATCH_CLASS = "--class";
+  protected static final String MATCH_INSTANCE = "--classname";
+
   protected String identifier;
   protected IdType type;
-  
+
   protected void setIdentifier(String windowIdentifier, IdType type) {
     this.identifier = windowIdentifier;
     this.type = type;
@@ -36,14 +42,64 @@ public abstract class WindowIdentity {
 
   /**
    * Returns the search string.
+   * 
    * @return string matching a window property
    */
   public String getIdentifier() {
     return identifier;
   }
-  
+
+  /**
+   * Returns flags used by all types of WindowIdentity.
+   * 
+   * @return common flags for xdotool search
+   */
+  protected String getCommonFlags() {
+    return COMMON_FLAGS;
+  }
+
+  /**
+   * Get flags used to match the window identifier.
+   * 
+   * @return match flags
+   */
+  protected String getMatchFlags() {
+    switch (type) {
+      case NAME:
+        return MATCH_NAME;
+      case CLASS:
+        return MATCH_CLASS;
+      case INSTANCE:
+        return MATCH_INSTANCE;
+      default:
+        return MATCH_ALL;
+    }
+  }
+
+  public String getFlags() {
+    return getFlags(false);
+  }
+
+  /**
+   * Gets search flags with an explicit --onlyvisible option.
+   * 
+   * @param onlyVisible
+   *          only match visible windows
+   * @return xdotool search flags
+   */
+  public String getFlags(boolean onlyVisible) {
+    String commonFlags = getCommonFlags();
+
+    if (onlyVisible) {
+      commonFlags += " --onlyvisible";
+    }
+
+    return String.format("%s %s %s", commonFlags, getMatchFlags(), getIdentifier());
+  }
+
   /**
    * Returns the type of property to be searched.
+   * 
    * @return property type
    */
   public IdType getType() {
