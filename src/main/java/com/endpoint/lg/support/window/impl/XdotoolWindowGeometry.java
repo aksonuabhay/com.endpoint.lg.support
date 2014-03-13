@@ -14,27 +14,25 @@
  * the License.
  */
 
-package com.endpoint.lg.support.window;
+package com.endpoint.lg.support.window.impl;
+
+import com.endpoint.lg.support.window.WindowGeometry;
 
 /**
- * Model identifying a window by a searchable attribute.
+ * Generates xdotool windowmove and windowsize flags for positioning a window.
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class WindowIdentity {
-  protected String identifier;
-
-  public String getIdentifier() {
-    return identifier;
-  }
-
+public class XdotoolWindowGeometry {
   /**
-   * Creates an object representing a window's identity.
+   * Generates xdotool windowmove and windowsize flags for positioning a window.
    * 
-   * @param identifier
-   *          string matching a window's name, class, or instance attribute
+   * @param geometry
+   *          the window geometry
+   * @return xdotool flags
    */
-  public WindowIdentity(String identifier) {
-    this.identifier = identifier;
+  public static String getFlags(WindowGeometry geometry) {
+    return String.format("windowmove %d %d windowsize %d %d", geometry.getX(), geometry.getY(),
+        geometry.getWidth(), geometry.getHeight());
   }
 }

@@ -14,18 +14,24 @@
  * the License.
  */
 
-package com.endpoint.lg.support.window;
+package com.endpoint.lg.support.window.impl;
+
+import com.endpoint.lg.support.window.WindowVisibility;
 
 /**
- * An interface for window state classes to convert to xdotool flags.
+ * Generates xdotool flags for showing or hiding a window.
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public interface XdotoolCommand {
+public class XdotoolWindowVisibility {
   /**
-   * Returns xdotool flags for the command.
+   * Generates xdotool flags for showing or hiding a window.
    * 
+   * @param visibility
+   *          the window's intended visibility
    * @return xdotool flags
    */
-  public String getFlags();
+  public static String getFlags(WindowVisibility visibility) {
+    return visibility.getVisible() ? "windowactivate windowfocus" : "windowminimize";
+  }
 }

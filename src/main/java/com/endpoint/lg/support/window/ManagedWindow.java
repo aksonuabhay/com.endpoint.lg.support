@@ -16,12 +16,14 @@
 
 package com.endpoint.lg.support.window;
 
-import interactivespaces.activity.binary.NativeActivityRunner;
+import interactivespaces.activity.binary.NativeApplicationRunner;
 import interactivespaces.activity.impl.BaseActivity;
 import interactivespaces.configuration.Configuration;
 import interactivespaces.configuration.SystemConfiguration;
 import interactivespaces.util.resource.ManagedResource;
 import interactivespaces.util.resource.ManagedResources;
+
+import com.endpoint.lg.support.window.impl.XdotoolCommandRunnerFactory;
 
 /**
  * Support class for placing windows within Space-configured viewports.
@@ -85,8 +87,8 @@ public class ManagedWindow extends ManagedResources implements ManagedResource {
   private WindowGeometry geometryOffset;
   private WindowVisibility visibility;
 
-  private WindowCommandRunnerFactory runnerFactory;
-  private NativeActivityRunner runner;
+  private XdotoolCommandRunnerFactory runnerFactory;
+  private NativeApplicationRunner runner;
 
   /**
    * Ensures that window management is supported for this platform.
@@ -99,10 +101,11 @@ public class ManagedWindow extends ManagedResources implements ManagedResource {
 
     if (platform.equals(PLATFORM_LINUX))
       return true;
-    else if (platform.equals(PLATFORM_OSX))
+
+    if (platform.equals(PLATFORM_OSX))
       return false;
-    else
-      return false;
+
+    return false;
   }
 
   /**
@@ -189,14 +192,17 @@ public class ManagedWindow extends ManagedResources implements ManagedResource {
     if (runner != null)
       runner.shutdown(); // only one xdotool process at a time
 
-    runner = runnerFactory.getCommand(identity, finalGeometry, visibility);
+    runner = runnerFactory.getRunner(identity, finalGeometry, visibility);
 
     runner.startup();
   }
 
+  /**
+   * Initialize the factory for managed window command runners.
+   */
   private void initRunnerFactory() {
     runnerFactory =
-        new WindowCommandRunnerFactory(activity.getController().getNativeActivityRunnerFactory(),
+        new XdotoolCommandRunnerFactory(activity.getController().getNativeActivityRunnerFactory(),
             activity.getLog());
   }
 

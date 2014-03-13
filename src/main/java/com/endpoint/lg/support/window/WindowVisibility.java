@@ -17,22 +17,24 @@
 package com.endpoint.lg.support.window;
 
 /**
- * Represents the desired visibility of a window.
+ * Model representing the visibility of a window.
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class WindowVisibility implements XdotoolCommand {
-  private boolean visible;
+public class WindowVisibility {
+  protected boolean visible;
 
+  /**
+   * Creates an object representing the intended visibility of a window.
+   * 
+   * @param visible
+   *          true if the window should be visible
+   */
   public WindowVisibility(boolean visible) {
     this.visible = visible;
   }
 
   public boolean getVisible() {
     return visible;
-  }
-
-  public String getFlags() {
-    return visible ? "windowactivate windowfocus" : "windowminimize";
   }
 }

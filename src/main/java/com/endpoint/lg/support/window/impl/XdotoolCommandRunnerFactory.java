@@ -14,12 +14,16 @@
  * the License.
  */
 
-package com.endpoint.lg.support.window;
+package com.endpoint.lg.support.window.impl;
 
-import interactivespaces.activity.binary.NativeActivityRunner;
 import interactivespaces.activity.binary.NativeActivityRunnerFactory;
+import interactivespaces.activity.binary.NativeApplicationRunner;
 
 import com.google.common.collect.Maps;
+
+import com.endpoint.lg.support.window.WindowGeometry;
+import com.endpoint.lg.support.window.WindowIdentity;
+import com.endpoint.lg.support.window.WindowVisibility;
 
 import java.util.Map;
 
@@ -39,26 +43,26 @@ import org.apache.commons.logging.Log;
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class WindowCommandRunnerFactory {
+public class XdotoolCommandRunnerFactory {
   public static final String XDOTOOL_BIN = "/usr/bin/xdotool";
 
   private NativeActivityRunnerFactory runnerFactory;
   private Log log;
 
-  public WindowCommandRunnerFactory(NativeActivityRunnerFactory runnerFactory, Log log) {
+  public XdotoolCommandRunnerFactory(NativeActivityRunnerFactory runnerFactory, Log log) {
     this.runnerFactory = runnerFactory;
     this.log = log;
   }
 
-  public NativeActivityRunner getCommand(WindowIdentity identity, WindowGeometry geometry,
+  public NativeApplicationRunner getRunner(WindowIdentity identity, WindowGeometry geometry,
       WindowVisibility visibility) {
-    NativeActivityRunner runner = runnerFactory.newPlatformNativeActivityRunner(log);
+    NativeApplicationRunner runner = runnerFactory.newPlatformNativeActivityRunner(log);
 
     Map<String, Object> runnerConfig = Maps.newHashMap();
 
-    runnerConfig.put(NativeActivityRunner.ACTIVITYNAME, XDOTOOL_BIN);
-    runnerConfig.put(NativeActivityRunner.FLAGS, String.format("%s %s %s",
-        identity.getFlags(!visibility.getVisible()), geometry.getFlags(), visibility.getFlags()));
+    runnerConfig.put(NativeApplicationRunner.ACTIVITYNAME, XDOTOOL_BIN);
+    runnerConfig.put(NativeApplicationRunner.FLAGS,
+        XdotoolCommand.getFlags(identity, geometry, visibility));
 
     runner.configure(runnerConfig);
 

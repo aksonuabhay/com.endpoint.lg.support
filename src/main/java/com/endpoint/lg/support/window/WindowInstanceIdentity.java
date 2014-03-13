@@ -17,12 +17,18 @@
 package com.endpoint.lg.support.window;
 
 /**
- * A WindowIdentity searching by instance.
+ * Identifies a window by its instance attributes.
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class WindowInstanceIdentity extends WindowIdentity {
+  /**
+   * Creates an object representing a window's identity.
+   * 
+   * @param identifier
+   *          string matching a window's instance attribute
+   */
   public WindowInstanceIdentity(String identifier) {
-    setIdentifier(identifier, WindowIdentity.IdType.INSTANCE);
+    super(identifier);
   }
 }
