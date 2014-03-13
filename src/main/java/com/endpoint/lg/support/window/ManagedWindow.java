@@ -21,7 +21,6 @@ import interactivespaces.activity.impl.BaseActivity;
 import interactivespaces.configuration.Configuration;
 import interactivespaces.configuration.SystemConfiguration;
 import interactivespaces.util.resource.ManagedResource;
-import interactivespaces.util.resource.ManagedResources;
 
 import com.endpoint.lg.support.window.impl.XdotoolCommandRunnerFactory;
 
@@ -30,7 +29,7 @@ import com.endpoint.lg.support.window.impl.XdotoolCommandRunnerFactory;
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class ManagedWindow extends ManagedResources implements ManagedResource {
+public class ManagedWindow implements ManagedResource {
   /**
    * Configuration key for viewport name.
    */
@@ -189,8 +188,7 @@ public class ManagedWindow extends ManagedResources implements ManagedResource {
     if (finalGeometry == null)
       return; // bypass when geometry could not be found
 
-    if (runner != null)
-      runner.shutdown(); // only one xdotool process at a time
+    shutdown();
 
     runner = runnerFactory.getRunner(identity, finalGeometry, visibility);
 
@@ -215,8 +213,6 @@ public class ManagedWindow extends ManagedResources implements ManagedResource {
    *          identifier for the window
    */
   public ManagedWindow(BaseActivity activity, WindowIdentity identity) {
-    super(activity.getLog());
-
     this.activity = activity;
     this.identity = identity;
     this.geometryOffset = new WindowGeometry(0, 0, 0, 0);
@@ -237,8 +233,6 @@ public class ManagedWindow extends ManagedResources implements ManagedResource {
    *          relative geometry within the configured viewport
    */
   public ManagedWindow(BaseActivity activity, WindowIdentity identity, WindowGeometry geometryOffset) {
-    super(activity.getLog());
-
     this.activity = activity;
     this.identity = identity;
     this.geometryOffset = geometryOffset;
@@ -252,7 +246,8 @@ public class ManagedWindow extends ManagedResources implements ManagedResource {
    */
   @Override
   public void shutdown() {
-    shutdownResources();
+    if (runner != null)
+      runner.shutdown();
   }
 
   /**
