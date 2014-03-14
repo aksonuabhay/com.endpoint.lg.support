@@ -40,6 +40,10 @@ public class TestInputEvent {
   private static final int TEST_SYN_CODE = InputEventCodes.SYN_REPORT;
   private static final int TEST_SYN_VALUE = 0;
 
+  private static final int TEST_ABS_TYPE = InputEventTypes.EV_ABS;
+  private static final int TEST_ABS_CODE = InputEventCodes.ABS_RZ;
+  private static final int TEST_ABS_VALUE = 32;
+
   private static ByteBuffer synBuffer;
 
   @BeforeClass
@@ -55,10 +59,27 @@ public class TestInputEvent {
   @Test
   public void testGetters() {
     InputEvent synEvent = new InputEvent(TEST_SYN_TYPE, TEST_SYN_CODE, TEST_SYN_VALUE);
-    
+
     assertEquals(TEST_SYN_TYPE, synEvent.getType());
     assertEquals(TEST_SYN_CODE, synEvent.getCode());
     assertEquals(TEST_SYN_VALUE, synEvent.getValue());
+  }
+
+  /**
+   * Test setters.
+   */
+  @Test
+  public void testSetters() {
+    InputEvent synEvent = new InputEvent(TEST_SYN_TYPE, TEST_SYN_CODE, TEST_SYN_VALUE);
+
+    synEvent.setType(TEST_ABS_TYPE);
+    assertEquals(TEST_ABS_TYPE, synEvent.getType());
+
+    synEvent.setCode(TEST_ABS_CODE);
+    assertEquals(TEST_ABS_CODE, synEvent.getCode());
+
+    synEvent.setValue(TEST_ABS_VALUE);
+    assertEquals(TEST_ABS_VALUE, synEvent.getValue());
   }
 
   /**
@@ -79,7 +100,7 @@ public class TestInputEvent {
   @Test
   public void testSerialization() {
     InputEvent synEvent = new InputEvent(TEST_SYN_TYPE, TEST_SYN_CODE, TEST_SYN_VALUE);
-    
+
     JsonBuilder deserialized = synEvent.getJsonBuilder();
 
     Map<String, Object> data = deserialized.build();
