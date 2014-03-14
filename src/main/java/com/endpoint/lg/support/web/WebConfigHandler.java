@@ -28,25 +28,27 @@ import java.io.IOException;
  * An HTTP request handler which serves a <code>Configuration</code> as a
  * JavaScript object.
  * 
+ * <p>
  * This is intended to be used for serving an entire live activity configuration
  * to its webapp.
  * 
- * To use this handler in a webapp, load the handler's path as a script. The
- * configuration will be in the global <code>IS.Configuration</code> object.
- * 
+ * <p>
  * Example:
  * 
  * <pre>
- * {@code
- * @Override
+ * <code>
+ * {@literal @}Override
  * public void onActivityStartup() {
  *   WebServer webserver = getWebServer();
  * 
  *   WebConfigHandler configHandler = new WebConfigHandler(getConfiguration());
+ * 
  *   webserver.addDynamicContentHandler("is.config.js", false, configHandler);
  * }
- * }
+ * </code>
  * </pre>
+ * 
+ * @see WebConfig
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */

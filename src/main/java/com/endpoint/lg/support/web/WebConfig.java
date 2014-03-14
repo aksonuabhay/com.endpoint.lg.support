@@ -26,6 +26,19 @@ import java.util.Map;
  * Generates a JavaScript snippet that reproduces the given
  * <code>Configuration</code>.
  * 
+ * <p>
+ * The configuration will be in the global <code>IS.Configuration</code> object.
+ * 
+ * <pre>
+ * <code>
+ * var activityName = IS.Configuration['space.activity.name'];
+ * 
+ * var port = Number(IS.Configuration['space.activity.webapp.port']);
+ * </code>
+ * </pre>
+ * 
+ * @see WebConfigHandler
+ * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class WebConfig {
