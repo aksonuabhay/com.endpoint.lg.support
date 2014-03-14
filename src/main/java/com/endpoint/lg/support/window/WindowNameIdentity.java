@@ -19,6 +19,8 @@ package com.endpoint.lg.support.window;
 /**
  * Identifies a window by its name attribute.
  * 
+ * @see ManagedWindow
+ * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class WindowNameIdentity extends WindowIdentity {

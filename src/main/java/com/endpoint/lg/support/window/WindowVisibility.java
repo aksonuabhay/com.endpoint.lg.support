@@ -19,6 +19,8 @@ package com.endpoint.lg.support.window;
 /**
  * Model representing the visibility of a window.
  * 
+ * @see ManagedWindow
+ * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class WindowVisibility {
