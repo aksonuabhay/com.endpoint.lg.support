@@ -25,7 +25,139 @@ import interactivespaces.util.resource.ManagedResource;
 import com.endpoint.lg.support.window.impl.XdotoolCommandRunnerFactory;
 
 /**
- * Support class for placing windows within Space-configured viewports.
+ * <h2>Window Management Interface for Activities</h2>
+ * 
+ * <h4>Configuring a Live Activity to Target a Viewport</h4>
+ * 
+ * <p>
+ * Set the <code>lg.window.viewport.target</code> key to a defined viewport.
+ * 
+ * <pre>
+ * <code>lg.window.viewport.target=center</code>
+ * </pre>
+ * 
+ * <h4>Native Activity Window Management</h4>
+ * 
+ * <p>
+ * Adding basic window placement to a native activity requires only that the
+ * window properties contain a unique identifier string.
+ * 
+ * <p>
+ * Different applications have different facilities for setting window
+ * attributes; in the case of Google Earth, passing -name to the executable will
+ * override the window instance.
+ * 
+ * <p>
+ * By creating a WindowIdentity with a unique string and referencing that string
+ * in the application arguments, the window can be found and positioned.
+ * 
+ * <pre>
+ * <code>
+ * import com.endpoint.lg.support.window.WindowIdentity;
+ * import com.endpoint.lg.support.window.WindowInstanceIdentity;
+ * import com.endpoint.lg.support.window.ManagedWindow;
+ * 
+ * private ManagedWindow window;
+ * 
+ * {@literal @}Override
+ * public void onActivitySetup() {
+ * 
+ *   WindowIdentity windowId = new WindowInstanceIdentity(getUuid());
+ * 
+ *   window = new ManagedWindow(this, windowId);
+ * 
+ *   addManagedResource(window);
+ * 
+ *   // ...
+ * }
+ * </code>
+ * </pre>
+ * 
+ * <h4>Browser Windows</h4>
+ * 
+ * <p>
+ * The browser window instance will, by default, be set to
+ * "Google-chrome ({activity.tmpdir}/google-chrome)", so searching for the
+ * activity tempdir should suffice.
+ * 
+ * <p>
+ * Note that the controller and live activity configurations can override the
+ * browser executable and arguments.
+ * 
+ * <pre>
+ * <code>
+ * File tmpdir = getActivityFilesystem().getTempDataDirectory();
+ * windowId = new WindowInstanceIdentity(tmpdir.getAbsolutePath());
+ * </code>
+ * </pre>
+ * 
+ * <h4>Handling Configuration Updates</h4>
+ * 
+ * <p>
+ * When the live activity receives new configuration, the window can be
+ * instantly repositioned accordingly.
+ * 
+ * <pre>
+ * <code>
+ * {@literal @}Override
+ * public void onActivityConfigurationUpdate(Map<String, Object> update) {
+ * 
+ *   if (window != null) // configuration update handler is sometimes called pre-setup
+ *     window.update();
+ * }
+ * </code>
+ * </pre>
+ * 
+ * <h4>Configuring Static Offsets</h4>
+ * 
+ * <p>
+ * What if you need to offset the window to hide a toolbar? Configuration
+ * defaults to the rescue:
+ * 
+ * <pre>
+ * <code>
+ * ### make the window 22 pixels taller
+ * 
+ * lg.window.rel.height=22
+ * 
+ * ### move the window up 22 pixels to hide the top
+ * 
+ * lg.window.rel.y=-22
+ * </code>
+ * </pre>
+ * 
+ * <h4>Hiding and Showing the Window</h4>
+ * 
+ * <pre>
+ * <code>
+ * window.setVisible(false); // hide the window
+ * 
+ * window.setVisible(true); // show the window
+ * </code>
+ * </pre>
+ * 
+ * <h4>Configuring Viewports</h4>
+ * 
+ * <p>
+ * Viewports can be configured in the controller's config/ path for global
+ * access by all live activities.
+ * 
+ * <p>
+ * Defining a viewport in the live activity's configuration will work, too.
+ * 
+ * <pre>
+ * <code>
+ * ### configure the center viewport
+ * ### 1080x1920 shifted to the right by 1920
+ * 
+ * lg.window.viewport.center.width=1080
+ * lg.window.viewport.center.height=1920
+ * lg.window.viewport.center.x=1920
+ * lg.window.viewport.center.y=0
+ * </code>
+ * </pre>
+ * 
+ * @see WindowIdentity
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */

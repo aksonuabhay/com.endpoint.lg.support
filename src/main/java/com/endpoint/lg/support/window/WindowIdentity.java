@@ -19,6 +19,8 @@ package com.endpoint.lg.support.window;
 /**
  * Model identifying a window by a searchable attribute.
  * 
+ * @see ManagedWindow
+ * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class WindowIdentity {

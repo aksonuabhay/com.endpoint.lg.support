@@ -19,6 +19,8 @@ package com.endpoint.lg.support.window;
 /**
  * Model for absolute or relative window geometry.
  * 
+ * @see ManagedWindow
+ * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public class WindowGeometry {
