@@ -21,6 +21,8 @@ import interactivespaces.util.data.json.JsonNavigator;
 /**
  * A handler for Ros messages.
  * 
+ * @see RosMessageHandlers
+ * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public interface RosMessageHandler {

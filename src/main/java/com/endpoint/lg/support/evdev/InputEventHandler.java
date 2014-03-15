@@ -19,6 +19,8 @@ package com.endpoint.lg.support.evdev;
 /**
  * A handler for <code>InputEvent</code>s.
  * 
+ * @see InputEventHandlers
+ * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
 public interface InputEventHandler {
