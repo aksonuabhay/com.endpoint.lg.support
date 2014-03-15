@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * A collection of {@link RosMessageHandler} instances keyed by their message
- * type. Based on WebsocketMessageHandlers by Keith M. Hughes.
+ * type. Based on {@link WebsocketMessageHandlers} by Keith M. Hughes.
  * 
  * <p>
  * An example using anonymous classes would be
@@ -32,7 +32,7 @@ import java.util.Map;
  * <pre>
  * <code>
  * handlers.registerHandler("viewSync", new RosMessageHandler() {
- *   @Override
+ *   {@literal @}Override
  *   public  void handleMessage(JsonNavigator json)  {
  *     // Do something with message
  *   }
@@ -62,7 +62,7 @@ public class RosMessageHandlers {
   public RosMessageHandlers(Log log) {
     this.log = log;
   }
-  
+
   protected Log getLog() {
     return log;
   }

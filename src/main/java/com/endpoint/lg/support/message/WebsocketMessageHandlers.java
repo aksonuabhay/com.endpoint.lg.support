@@ -27,31 +27,31 @@ import java.util.Map;
 /**
  * A collection of {@link JsonMessageHandler} instances keyed by their message
  * type.
- *
+ * 
  * <p>
  * Messages need to be of the form
- *
+ * 
  * <p>
- * <code> { 'type': type, 'data': data} } </code>
- *
+ * <code> { 'type': type, 'data': data } </code>
+ * 
  * <p>
  * The {@code type} field will give the type of the message, e.g. viewsync, and
  * {@code data} will give the data of the message.
- *
+ * 
  * <p>
  * An example using anonymous classes would be
- *
+ * 
  * <pre>
  * <code>
  * handlers.registerHandler("viewSync", new WebsocketMessageHandler() {
- *   @Override
+ *   {@literal @}Override
  *   public  void handleMessage(String connectionId, JsonNavigator data)  {
  *     // Do something with message
  *   }
  * });
  * </code>
  * </pre>
- *
+ * 
  * @author Keith M. Hughes
  */
 public class WebsocketMessageHandlers {
@@ -68,21 +68,21 @@ public class WebsocketMessageHandlers {
 
   /**
    * Construct a handlers object.
-   *
+   * 
    * @param log
    *          the log to use
    */
   public WebsocketMessageHandlers(Log log) {
     this.log = log;
   }
-  
+
   protected Log getLog() {
     return log;
   }
 
   /**
    * Register a handler.
-   *
+   * 
    * @param messageType
    *          the type of message to be handled
    * @param handler
@@ -94,7 +94,7 @@ public class WebsocketMessageHandlers {
 
   /**
    * Handle a message from a given connection.
-   *
+   * 
    * @param connectionId
    *          ID of the connection
    * @param message
@@ -110,10 +110,12 @@ public class WebsocketMessageHandlers {
         try {
           handler.handleMessage(connectionId, m.down(MessageWrapper.MESSAGE_FIELD_DATA));
         } catch (Exception e) {
-          log.error(String.format("Error for message with type %s from connection %s", messageType, connectionId), e);
+          log.error(String.format("Error for message with type %s from connection %s", messageType,
+              connectionId), e);
         }
       } else {
-        log.warn(String.format("Message with unknown type %s came from connection %s", messageType, connectionId));
+        log.warn(String.format("Message with unknown type %s came from connection %s", messageType,
+            connectionId));
       }
     } else {
       log.warn(String.format("Message without a type came from connection %s", connectionId));
