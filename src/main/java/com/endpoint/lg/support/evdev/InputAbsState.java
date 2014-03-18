@@ -24,39 +24,87 @@ import interactivespaces.util.data.json.JsonNavigator;
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class InputAbsState extends InputAxisState {
+public class InputAbsState {
   /**
-   * Make an <code>InputAbsState</code> for EV_ABS.
+   * Only update the state when events of this type are submitted.
    */
-  public InputAbsState() {
-    super(InputEventTypes.EV_ABS, InputEventCodes.ABS_CNT);
+  public static final int TYPE = InputEventTypes.EV_ABS;
+
+  protected int values[];
+  protected boolean dirty;
+
+  protected void initAxes(int numAxes) {
+    values = new int[numAxes];
+    clear();
   }
 
   /**
-   * Creates an InputAxisState from a JSON message.
-   * 
-   * @param json
-   *          message with axis values
+   * Creates an InputAbsState.
+   */
+  public InputAbsState() {
+    initAxes(InputEventCodes.ABS_CNT);
+  }
+
+  /**
+   * Creates an InputAbsState from a serialized state.
    */
   public InputAbsState(JsonNavigator json) {
-    super(InputEventTypes.EV_ABS, InputEventCodes.ABS_CNT);
+    initAxes(InputEventCodes.ABS_CNT);
+
     update(json);
   }
 
   /**
-   * Override the clear method to not reset values.
+   * Returns the value for the given axis.
+   * 
+   * @param code
+   *          axis code
+   * @return axis value
    */
-  @Override
-  public void clear() {
-    java.util.Arrays.fill(dirty, false);
+  public int getValue(int axis) {
+    return values[axis];
   }
 
   /**
-   * Serialize the state. Include all non-zero axes.
+   * Sets a value for an axis.
+   * 
+   * @param axis
+   *          axis code
+   * @param value
+   *          axis value
+   * @return true if the value changed
+   */
+  public boolean setValue(int axis, int value) {
+    if (getValue(axis) != value) {
+      values[axis] = value;
+      dirty = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Update this state from an incoming event.
+   * 
+   * @param event
+   *          an input event
+   * @return true if the state changed
+   */
+  public boolean update(InputEvent event) {
+    if (event.getType() == TYPE) {
+      return setValue(event.getCode(), event.getValue());
+    }
+
+    return false;
+  }
+
+  /**
+   * Serialize the state. Only include axes which are not zero.
    * 
    * @return json representation of the axis state
    */
-  public JsonBuilder getNonZeroAsJsonBuilder() {
+  public JsonBuilder getJsonBuilder() {
     JsonBuilder json = new JsonBuilder();
 
     for (Integer i = 0; i < values.length; i++) {
@@ -66,5 +114,49 @@ public class InputAbsState extends InputAxisState {
     }
 
     return json;
+  }
+
+  /**
+   * Deserialize the state.
+   * 
+   * @param json
+   *          incoming state message
+   * @return true if the state changed
+   */
+  public boolean update(JsonNavigator json) {
+    boolean updated = false;
+
+    for (String k : json.getCurrentItem().keySet()) {
+      if (setValue(Integer.parseInt(k), json.getInteger(k)))
+        updated = true;
+    }
+
+    return updated;
+  }
+
+  /**
+   * Clear the state's dirtiness.
+   */
+  public void clear() {
+    dirty = false;
+  }
+
+  /**
+   * Check for dirt.
+   */
+  public boolean isDirty() {
+    return dirty;
+  }
+
+  /**
+   * Check for non-zero axes.
+   */
+  public boolean isNonZero() {
+    for (int i = 0; i < values.length; i++) {
+      if (getValue(i) != 0)
+        return true;
+    }
+
+    return false;
   }
 }

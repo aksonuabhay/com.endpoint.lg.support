@@ -23,22 +23,24 @@ import interactivespaces.util.data.json.JsonNavigator;
  * 
  * @author Matt Vollrath <matt@endpoint.com>
  */
-public class InputRelState extends InputAxisState {
+public class InputRelState extends InputAbsState {
   /**
-   * Make an <code>InputAbsState</code> for EV_REL.
+   * Only update the state when events of this type are submitted.
    */
+  public static final int TYPE = InputEventTypes.EV_REL;
+
   public InputRelState() {
-    super(InputEventTypes.EV_REL, InputEventCodes.REL_CNT);
+    initAxes(InputEventCodes.REL_CNT);
   }
 
   /**
-   * Creates an InputAxisState from a JSON message.
+   * Creates an InputRelState from a JSON message.
    * 
    * @param json
    *          message with axis values
    */
   public InputRelState(JsonNavigator json) {
-    super(InputEventTypes.EV_REL, InputEventCodes.REL_CNT);
+    initAxes(InputEventCodes.REL_CNT);
     update(json);
   }
 
@@ -51,10 +53,38 @@ public class InputRelState extends InputAxisState {
    */
   @Override
   public boolean update(InputEvent event) {
-    if (event.getType() == getType()) {
+    if (event.getType() == TYPE) {
       return setValue(event.getCode(), event.getValue() + getValue(event.getCode()));
     }
 
     return false;
+  }
+
+  /**
+   * Deserialize the state.
+   * 
+   * @param json
+   *          incoming state message
+   * @return true if the state changed
+   */
+  public boolean update(JsonNavigator json) {
+    boolean updated = false;
+
+    for (String k : json.getCurrentItem().keySet()) {
+      int i = Integer.parseInt(k);
+
+      if (setValue(i, json.getInteger(k) + getValue(i)))
+        updated = true;
+    }
+
+    return updated;
+  }
+
+  /**
+   * Clear the state's values and dirtiness.
+   */
+  public void clear() {
+    java.util.Arrays.fill(values, 0);
+    dirty = false;
   }
 }
