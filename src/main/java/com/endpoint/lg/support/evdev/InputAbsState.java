@@ -30,6 +30,11 @@ public class InputAbsState {
    */
   public static final int TYPE = InputEventTypes.EV_ABS;
 
+  /**
+   * The number of axes for this type.
+   */
+  public static final int NUM_AXES = InputEventCodes.ABS_CNT;
+
   protected int values[];
   protected boolean dirty;
 
@@ -42,18 +47,25 @@ public class InputAbsState {
    * Creates an InputAbsState.
    */
   public InputAbsState() {
-    initAxes(InputEventCodes.ABS_CNT);
+    initAxes(NUM_AXES);
+  }
+
+  /**
+   * Loads all axes from a json message.
+   */
+  protected void deserialize(JsonNavigator json) {
+    for (String k : json.getCurrentItem().keySet()) {
+      setValue(Integer.parseInt(k), json.getInteger(k));
+    }
   }
 
   /**
    * Creates an InputAbsState from a serialized state.
    */
   public InputAbsState(JsonNavigator json) {
-    initAxes(InputEventCodes.ABS_CNT);
+    initAxes(NUM_AXES);
 
-    for (String k : json.getCurrentItem().keySet()) {
-      setValue(Integer.parseInt(k), json.getInteger(k));
-    }
+    deserialize(json);
   }
 
   /**

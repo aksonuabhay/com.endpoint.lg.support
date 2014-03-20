@@ -19,7 +19,8 @@ package com.endpoint.lg.support.test.evdev;
 import static com.endpoint.lg.support.evdev.InputEventCodes.*;
 import static com.endpoint.lg.support.evdev.InputEventTypes.*;
 
-import com.endpoint.lg.support.evdev.InputAbsState;
+import interactivespaces.util.data.json.JsonBuilder;
+import interactivespaces.util.data.json.JsonNavigator;
 
 import com.endpoint.lg.support.evdev.InputRelState;
 import com.endpoint.lg.support.evdev.InputEvent;
@@ -90,5 +91,42 @@ public class TestInputRelState {
 
     assertFalse(relState.isDirty());
     assertFalse(relState.isNonZero());
+  }
+
+  /**
+   * Verify that a clean, zero state can be serialized and deserialized
+   * properly.
+   */
+  @Test
+  public void testCleanSerialization() {
+    InputRelState relState = new InputRelState();
+
+    JsonBuilder serialized = relState.getJsonBuilder();
+
+    JsonNavigator message = new JsonNavigator(serialized.build());
+    InputRelState reconstructed = new InputRelState(message);
+
+    assertFalse(reconstructed.isDirty());
+    assertFalse(reconstructed.isNonZero());
+  }
+
+  /**
+   * Verify that a dirty state can be serialized and deserialized properly.
+   */
+  @Test
+  public void testDirtySerialization() {
+    InputRelState relState = new InputRelState();
+
+    relState.update(relXEvent);
+
+    JsonBuilder serialized = relState.getJsonBuilder();
+
+    JsonNavigator message = new JsonNavigator(serialized.build());
+    InputRelState reconstructed = new InputRelState(message);
+
+    assertEquals(TEST_REL_X_VALUE, reconstructed.getValue(TEST_REL_X_CODE));
+
+    assertTrue(reconstructed.isDirty());
+    assertTrue(reconstructed.isNonZero());
   }
 }

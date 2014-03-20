@@ -29,8 +29,13 @@ public class InputRelState extends InputAbsState {
    */
   public static final int TYPE = InputEventTypes.EV_REL;
 
+  /**
+   * The number of axes for this type.
+   */
+  public static final int NUM_AXES = InputEventCodes.REL_CNT;
+
   public InputRelState() {
-    initAxes(InputEventCodes.REL_CNT);
+    initAxes(NUM_AXES);
   }
 
   /**
@@ -40,11 +45,9 @@ public class InputRelState extends InputAbsState {
    *          message with axis values
    */
   public InputRelState(JsonNavigator json) {
-    initAxes(InputEventCodes.REL_CNT);
+    initAxes(NUM_AXES);
 
-    for (String k : json.getCurrentItem().keySet()) {
-      setValue(Integer.parseInt(k), json.getInteger(k));
-    }
+    deserialize(json);
   }
 
   /**
