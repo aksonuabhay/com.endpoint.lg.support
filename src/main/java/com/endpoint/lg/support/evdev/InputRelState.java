@@ -41,7 +41,10 @@ public class InputRelState extends InputAbsState {
    */
   public InputRelState(JsonNavigator json) {
     initAxes(InputEventCodes.REL_CNT);
-    update(json);
+
+    for (String k : json.getCurrentItem().keySet()) {
+      setValue(Integer.parseInt(k), json.getInteger(k));
+    }
   }
 
   /**
@@ -58,26 +61,6 @@ public class InputRelState extends InputAbsState {
     }
 
     return false;
-  }
-
-  /**
-   * Deserialize the state.
-   * 
-   * @param json
-   *          incoming state message
-   * @return true if the state changed
-   */
-  public boolean update(JsonNavigator json) {
-    boolean updated = false;
-
-    for (String k : json.getCurrentItem().keySet()) {
-      int i = Integer.parseInt(k);
-
-      if (setValue(i, json.getInteger(k) + getValue(i)))
-        updated = true;
-    }
-
-    return updated;
   }
 
   /**

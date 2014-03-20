@@ -51,7 +51,9 @@ public class InputAbsState {
   public InputAbsState(JsonNavigator json) {
     initAxes(InputEventCodes.ABS_CNT);
 
-    update(json);
+    for (String k : json.getCurrentItem().keySet()) {
+      setValue(Integer.parseInt(k), json.getInteger(k));
+    }
   }
 
   /**
@@ -114,24 +116,6 @@ public class InputAbsState {
     }
 
     return json;
-  }
-
-  /**
-   * Deserialize the state.
-   * 
-   * @param json
-   *          incoming state message
-   * @return true if the state changed
-   */
-  public boolean update(JsonNavigator json) {
-    boolean updated = false;
-
-    for (String k : json.getCurrentItem().keySet()) {
-      if (setValue(Integer.parseInt(k), json.getInteger(k)))
-        updated = true;
-    }
-
-    return updated;
   }
 
   /**
