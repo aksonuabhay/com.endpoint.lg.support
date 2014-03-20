@@ -35,7 +35,7 @@ public class InputAbsState {
 
   protected void initAxes(int numAxes) {
     values = new int[numAxes];
-    clear();
+    clean();
   }
 
   /**
@@ -121,7 +121,7 @@ public class InputAbsState {
   /**
    * Clear the state's dirtiness.
    */
-  public void clear() {
+  public void clean() {
     dirty = false;
   }
 
@@ -130,6 +130,14 @@ public class InputAbsState {
    */
   public boolean isDirty() {
     return dirty;
+  }
+
+  /**
+   * Zero the state.
+   */
+  public void zero() {
+    java.util.Arrays.fill(values, 0);
+    clean();
   }
 
   /**

@@ -62,12 +62,4 @@ public class InputRelState extends InputAbsState {
 
     return false;
   }
-
-  /**
-   * Clear the state's values and dirtiness.
-   */
-  public void clear() {
-    java.util.Arrays.fill(values, 0);
-    dirty = false;
-  }
 }

@@ -66,10 +66,25 @@ public class TestInputAbsState {
     assertTrue(absState.isDirty());
     assertTrue(absState.isNonZero());
 
-    absState.clear();
+    absState.clean();
 
     assertFalse(absState.isDirty());
     assertTrue(absState.isNonZero());
+  }
+
+  /**
+   * Verify that the state can be zeroed.
+   */
+  @Test
+  public void testZero() {
+    InputAbsState absState = new InputAbsState();
+
+    absState.update(absXEvent);
+
+    absState.zero();
+
+    assertFalse(absState.isDirty());
+    assertFalse(absState.isNonZero());
   }
 
   /**
