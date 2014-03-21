@@ -16,13 +16,15 @@
 
 package com.endpoint.lg.support.window;
 
-import interactivespaces.activity.binary.NativeApplicationRunner;
+import java.util.List;
+
 import interactivespaces.activity.impl.BaseActivity;
 import interactivespaces.configuration.Configuration;
 import interactivespaces.configuration.SystemConfiguration;
+import interactivespaces.util.process.NativeCommandRunner;
 import interactivespaces.util.resource.ManagedResource;
 
-import com.endpoint.lg.support.window.impl.XdotoolCommandRunnerFactory;
+import com.endpoint.lg.support.window.impl.AwesomeCommand;
 
 /**
  * <h2>Window Management Interface for Activities</h2>
@@ -218,8 +220,7 @@ public class ManagedWindow implements ManagedResource {
   private WindowGeometry geometryOffset;
   private WindowVisibility visibility;
 
-  private XdotoolCommandRunnerFactory runnerFactory;
-  private NativeApplicationRunner runner;
+  private NativeCommandRunner commandRunner;
 
   /**
    * Ensures that window management is supported for this platform.
@@ -320,20 +321,35 @@ public class ManagedWindow implements ManagedResource {
     if (finalGeometry == null)
       return; // bypass when geometry could not be found
 
-    shutdown();
+    List<String> command =
+        AwesomeCommand.getConvergenceCommand(identity, finalGeometry, visibility);
 
-    runner = runnerFactory.getRunner(identity, finalGeometry, visibility);
+    activity.getLog().info(command.toString());
 
-    runner.startup();
+    commandRunner.execute(command);
+  }
+
+  /**
+   * Clears the window positioning rule.
+   */
+  private void shutdownWindow() {
+    if (!checkPlatformSupport()) {
+      activity.getLog().warn("Window management not implemented for this platform");
+      return;
+    }
+
+    List<String> command = AwesomeCommand.getShutdownCommand(identity);
+
+    activity.getLog().info(command.toString());
+
+    commandRunner.execute(command);
   }
 
   /**
    * Initialize the factory for managed window command runners.
    */
-  private void initRunnerFactory() {
-    runnerFactory =
-        new XdotoolCommandRunnerFactory(activity.getController().getNativeActivityRunnerFactory(),
-            activity.getLog());
+  private void initRunner() {
+    commandRunner = new NativeCommandRunner();
   }
 
   /**
@@ -350,7 +366,7 @@ public class ManagedWindow implements ManagedResource {
     this.geometryOffset = new WindowGeometry(0, 0, 0, 0);
     this.visibility = new WindowVisibility(false);
 
-    initRunnerFactory();
+    initRunner();
   }
 
   /**
@@ -370,16 +386,15 @@ public class ManagedWindow implements ManagedResource {
     this.geometryOffset = geometryOffset;
     this.visibility = new WindowVisibility(false);
 
-    initRunnerFactory();
+    initRunner();
   }
 
   /**
-   * Spin down any outstanding window placement commands.
+   * Remove any outstanding window rules.
    */
   @Override
   public void shutdown() {
-    if (runner != null)
-      runner.shutdown();
+    shutdownWindow();
   }
 
   /**
