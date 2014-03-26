@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.endpoint.lg.support.test.evdev;
+package com.endpoint.lg.support.evdev;
 
 import static com.endpoint.lg.support.evdev.InputEventCodes.*;
 import static com.endpoint.lg.support.evdev.InputEventTypes.*;

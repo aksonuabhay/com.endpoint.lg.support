@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.endpoint.lg.support.test.web;
+package com.endpoint.lg.support.web;
 
 import static org.junit.Assert.*;
 

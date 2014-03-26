@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.endpoint.lg.support.test.domain.streetview;
+package com.endpoint.lg.support.domain.streetview;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;

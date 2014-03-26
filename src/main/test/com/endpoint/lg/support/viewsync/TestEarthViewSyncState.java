@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.endpoint.lg.support.test.viewsync;
+package com.endpoint.lg.support.viewsync;
 
 import static org.junit.Assert.*;
 
