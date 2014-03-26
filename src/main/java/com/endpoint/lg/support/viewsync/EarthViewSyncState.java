@@ -152,8 +152,7 @@ public class EarthViewSyncState {
   public EarthViewSyncState(String viewsyncData) {
 
     // http://code.google.com/p/liquid-galaxy/wiki/GoogleEarth_ViewSync
-    String[] viewsyncDataParsed = new String[10];
-    viewsyncDataParsed = viewsyncData.split("\\,");
+    String[] viewsyncDataParsed = viewsyncData.split("\\,", 10);
 
     double counter = Double.parseDouble(viewsyncDataParsed[0]);
     double latitude = Double.parseDouble(viewsyncDataParsed[1]);
