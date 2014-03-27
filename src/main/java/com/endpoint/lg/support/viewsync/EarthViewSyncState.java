@@ -34,6 +34,11 @@ import com.endpoint.lg.support.message.MessageFields;
 
 public class EarthViewSyncState {
   /**
+   * The default planet, if a viewsync datagram does not specify one.
+   */
+  public static final String DEFAULT_PLANET = "earth";
+
+  /**
    * The orientation: heading, tilt, roll, (range)
    */
   private Orientation orientation;
@@ -147,8 +152,7 @@ public class EarthViewSyncState {
   public EarthViewSyncState(String viewsyncData) {
 
     // http://code.google.com/p/liquid-galaxy/wiki/GoogleEarth_ViewSync
-    String[] viewsyncDataParsed = new String[10];
-    viewsyncDataParsed = viewsyncData.split("\\,");
+    String[] viewsyncDataParsed = viewsyncData.split("\\,", 10);
 
     double counter = Double.parseDouble(viewsyncDataParsed[0]);
     double latitude = Double.parseDouble(viewsyncDataParsed[1]);
@@ -163,11 +167,7 @@ public class EarthViewSyncState {
 
     // the planet portion of the comma-separated-values from Earth might be
     // empty - need to account for that
-    if (viewsyncDataParsed.length > 9) {
-      String planet = viewsyncDataParsed[9];
-    } else {
-      String planet = "";
-    }
+    String planet = viewsyncDataParsed[9].equals("") ? DEFAULT_PLANET : viewsyncDataParsed[9];
 
     Location location = new Location(latitude, longitude, altitude);
     Orientation orientation = new Orientation(heading, range, tilt, roll);
@@ -178,7 +178,7 @@ public class EarthViewSyncState {
     this.counter = counter;
     this.location = location;
     this.orientation = orientation;
-
+    this.planet = planet;
   }
 
   // TODO: deserialize an EarthViewSyncState that has arrived from Ros

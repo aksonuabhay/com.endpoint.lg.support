@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.endpoint.lg.support.test.window;
+package com.endpoint.lg.support.window;
 
 import static org.junit.Assert.*;
 

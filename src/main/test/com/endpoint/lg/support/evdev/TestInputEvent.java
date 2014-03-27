@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.endpoint.lg.support.test.evdev;
+package com.endpoint.lg.support.evdev;
 
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
