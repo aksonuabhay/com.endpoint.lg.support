@@ -18,23 +18,65 @@ package com.endpoint.lg.support.message;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
+import interactivespaces.util.geometry.Vector3;
 
 import com.endpoint.lg.support.domain.Location;
 import com.endpoint.lg.support.domain.Orientation;
 
 /**
  * Create messages for various domain objects.
- *
+ * 
  * @author Keith M. Hughes
  */
 public class DomainMessages {
 
   /**
-   * Get an orientation out of the data.
-   *
+   * Get a 3d vector out of the data.
+   * 
    * @param data
    *          the incoming data
-   *
+   * @param field
+   *          the message field for the vector
+   * @return a vector
+   */
+  public static Vector3 deserializeVector3(JsonNavigator data, String field) {
+    data.down(field);
+
+    Double v0 = data.getDouble(0);
+    Double v1 = data.getDouble(1);
+    Double v2 = data.getDouble(2);
+
+    data.up();
+
+    return new Vector3(v0, v1, v2);
+  }
+
+  /**
+   * Write a 3d vector into data.
+   * 
+   * @param vector
+   *          the vector
+   * @param field
+   *          message field
+   * @param data
+   *          the data to write to
+   */
+  public static void serializeVector3(Vector3 vector, String field, JsonBuilder data) {
+    data.newArray(field);
+
+    data.put(vector.getV0());
+    data.put(vector.getV1());
+    data.put(vector.getV2());
+
+    data.up();
+  }
+
+  /**
+   * Get an orientation out of the data.
+   * 
+   * @param data
+   *          the incoming data
+   * 
    * @return an orientation for the data
    */
   public static Orientation deserializeOrientation(JsonNavigator data) {
@@ -52,7 +94,7 @@ public class DomainMessages {
 
   /**
    * Write an orientation object into the current data.
-   *
+   * 
    * @param orientation
    *          the orientation
    * @param data
@@ -71,10 +113,10 @@ public class DomainMessages {
 
   /**
    * Get an location out of the data.
-   *
+   * 
    * @param data
    *          the incoming data
-   *
+   * 
    * @return a location for the data
    */
   public static Location deserializeLocation(JsonNavigator data) {
@@ -91,10 +133,10 @@ public class DomainMessages {
 
   /**
    * Serialize an location into the data.
-   *
+   * 
    * @param data
    *          the incoming data
-   *
+   * 
    * @return a location for the data
    */
   public static void serializeLocation(Location location, JsonBuilder data) {
