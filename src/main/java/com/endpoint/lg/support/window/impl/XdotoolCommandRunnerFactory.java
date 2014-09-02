@@ -17,7 +17,7 @@
 package com.endpoint.lg.support.window.impl;
 
 import interactivespaces.activity.binary.NativeActivityRunnerFactory;
-import interactivespaces.activity.binary.NativeApplicationRunner;
+import interactivespaces.util.process.NativeApplicationRunner;
 
 import com.google.common.collect.Maps;
 
