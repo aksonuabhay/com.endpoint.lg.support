@@ -25,4 +25,13 @@ public class Window {
         Window w = om.readValue(jsonWindow, Window.class);
         return w;
     }
+
+    /*
+     * Converts a window's viewport and coordinate properties into the proper
+     * window_slug value, used by the earth client and kmlsync activities.
+     */
+    public String getWindowSlug() {
+        String s = x_coord + ":" + y_coord + ":" + presentation_viewport;
+        return s;
+    }
 }
