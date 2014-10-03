@@ -218,6 +218,7 @@ public class ManagedWindow implements ManagedResource {
   private WindowIdentity identity;
   private WindowGeometry finalGeometry;
   private WindowGeometry geometryOffset;
+  private WindowGeometry manualGeometry;
   private WindowVisibility visibility;
 
   private NativeCommandRunner commandRunner;
@@ -308,6 +309,13 @@ public class ManagedWindow implements ManagedResource {
   }
 
   /**
+   * Overrides geometry from Configuration object
+   */
+  public void setGeometry(WindowGeometry wg) {
+    manualGeometry = wg;
+  }
+
+  /**
    * Positions the window, picking up any changes in configuration.
    */
   private void positionWindow() {
@@ -316,7 +324,12 @@ public class ManagedWindow implements ManagedResource {
       return;
     }
 
-    finalGeometry = calculateGeometry();
+    if (manualGeometry != null) {
+      finalGeometry = manualGeometry;
+    }
+    else {
+      finalGeometry = calculateGeometry();
+    }
 
     if (finalGeometry == null)
       return; // bypass when geometry could not be found
@@ -365,6 +378,7 @@ public class ManagedWindow implements ManagedResource {
     this.identity = identity;
     this.geometryOffset = new WindowGeometry(0, 0, 0, 0);
     this.visibility = new WindowVisibility(false);
+    this.manualGeometry = null;
 
     initRunner();
   }
