@@ -17,7 +17,7 @@
 package com.endpoint.lg.support.window.impl;
 
 import interactivespaces.activity.binary.NativeActivityRunnerFactory;
-import interactivespaces.activity.binary.NativeApplicationRunner;
+import interactivespaces.util.process.NativeApplicationRunner;
 
 import com.google.common.collect.Maps;
 
@@ -60,8 +60,8 @@ public class XdotoolCommandRunnerFactory {
 
     Map<String, Object> runnerConfig = Maps.newHashMap();
 
-    runnerConfig.put(NativeApplicationRunner.ACTIVITYNAME, XDOTOOL_BIN);
-    runnerConfig.put(NativeApplicationRunner.FLAGS,
+    runnerConfig.put(NativeApplicationRunner.EXECUTABLE_PATHNAME, XDOTOOL_BIN);
+    runnerConfig.put(NativeApplicationRunner.EXECUTABLE_FLAGS,
         XdotoolCommand.getFlags(identity, geometry, visibility));
 
     runner.configure(runnerConfig);
