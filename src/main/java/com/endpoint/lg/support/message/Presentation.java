@@ -10,7 +10,7 @@ import java.io.IOException;
  * @author Joshua Tolley <josh@endpoint.com>
  */
 public class Presentation {
-    public String description, name, resource_uri;
+    public String description, name, resource_uri, slug;
     public Scene[] scenes;
 
     /**
