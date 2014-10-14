@@ -99,6 +99,10 @@ public class WindowGeometry {
     y += relativeY;
   }
 
+  public String toString() {
+    return "WindowGeometry: " + width + "x" + height + ", at (" + x + ", " + y + ")";
+  }
+
   /**
    * Modifies the geometry by the given relative geometry.
    * 

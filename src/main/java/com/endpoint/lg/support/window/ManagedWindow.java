@@ -228,6 +228,7 @@ public class ManagedWindow implements ManagedResource {
   private WindowGeometry finalGeometry;
   private WindowGeometry geometryOffset;
   private WindowGeometry manualGeometry;
+  private WindowGeometry manualSize;
   private WindowVisibility visibility;
 
   private NativeCommandRunner commandRunner;
@@ -307,12 +308,25 @@ public class ManagedWindow implements ManagedResource {
   private WindowGeometry calculateGeometry() {
     WindowGeometry geometry = findViewportGeometry();
 
+    activity.getLog().debug("Viewport geometry for viewport " + activity.getConfiguration().getPropertyString(CONFIG_KEY_VIEWPORT_TARGET, "<can't find>") + ": " + geometry.toString());
+
     if (geometry == null)
       return null; // bypass when viewport geometry is not found
 
     geometry.offsetBy(findRelativeGeometry());
 
+    activity.getLog().debug("Geometry including relativeGeometry stuff: " + geometry.toString()); 
+
     geometry.offsetBy(geometryOffset);
+
+    activity.getLog().debug("Geometry including current offset: " + geometry.toString()); 
+
+    if (manualSize != null) {
+        geometry.setWidth(manualSize.getWidth());
+        geometry.setHeight(manualSize.getHeight());
+    }
+
+    activity.getLog().debug("Final geometry: " + geometry.toString()); 
 
     return geometry;
   }
@@ -334,6 +348,7 @@ public class ManagedWindow implements ManagedResource {
     }
 
     if (manualGeometry != null) {
+      activity.getLog().debug("Using manual geometry for window");
       finalGeometry = manualGeometry;
     }
     else {
@@ -388,6 +403,7 @@ public class ManagedWindow implements ManagedResource {
     this.geometryOffset = new WindowGeometry(0, 0, 0, 0);
     this.visibility = new WindowVisibility(false);
     this.manualGeometry = null;
+    this.manualSize = null;
 
     initRunner();
   }
@@ -408,8 +424,21 @@ public class ManagedWindow implements ManagedResource {
     this.identity = identity;
     this.geometryOffset = geometryOffset;
     this.visibility = new WindowVisibility(false);
+    this.manualSize = null;
 
     initRunner();
+  }
+
+  /**
+   * Sets hard values for width and height of this window
+   */
+  public void resize(int width, int height) {
+    if (width <= 0 || height <= 0) {
+      manualSize = null;
+    }
+    else {
+      manualSize = new WindowGeometry(width, height, 0, 0);
+    }
   }
 
   /**
