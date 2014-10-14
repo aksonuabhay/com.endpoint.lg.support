@@ -127,6 +127,15 @@ import com.endpoint.lg.support.window.impl.AwesomeCommand;
  * lg.window.rel.y=-22
  * </code>
  * </pre>
+ *
+ * <h4>Moving the window after the fact</h4>
+ *
+ * <pre>
+ * <code>
+ * window.setGeometryOffset(geometryOffset);
+ * window.update();
+ * </code>
+ * </pre>
  * 
  * <h4>Hiding and Showing the Window</h4>
  * 
@@ -401,6 +410,13 @@ public class ManagedWindow implements ManagedResource {
     this.visibility = new WindowVisibility(false);
 
     initRunner();
+  }
+
+  /**
+   * Modifies geometryOffset, in case it needs to change during the life of the window
+   */
+  public void setGeometryOffset(WindowGeometry geometryOffset) {
+    this.geometryOffset = geometryOffset;
   }
 
   /**
