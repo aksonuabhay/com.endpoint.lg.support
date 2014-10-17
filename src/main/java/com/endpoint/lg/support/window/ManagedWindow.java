@@ -308,7 +308,11 @@ public class ManagedWindow implements ManagedResource {
   private WindowGeometry calculateGeometry() {
     WindowGeometry geometry = findViewportGeometry();
 
-    activity.getLog().debug("Viewport geometry for viewport " + activity.getConfiguration().getPropertyString(CONFIG_KEY_VIEWPORT_TARGET, "<can't find>") + ": " + geometry.toString());
+    activity.getLog().debug(String.format("%s %s: %s",
+        "Viewport geometry for viewport ",
+        activity.getConfiguration().getPropertyString(CONFIG_KEY_VIEWPORT_TARGET, "<can't find>"),
+        (geometry == null ? "<NULL>" : geometry.toString())
+    );
 
     if (geometry == null)
       return null; // bypass when viewport geometry is not found
