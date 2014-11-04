@@ -136,6 +136,39 @@ public class AwesomeCommand {
   }
 
   /**
+   * Returns a shell command to raise a window
+   */
+  public static List<String> raiseWindow(WindowIdentity identity) {
+    return clientApiCommand(identity, "c:raise()");
+  }
+
+  /**
+   * Returns a shell command to lower a window
+   */
+  public static List<String> lowerWindow(WindowIdentity identity) {
+    return clientApiCommand(identity, "c:lower()");
+  }
+
+  /**
+   * Returns a shell command to run a Lua command on a specific window
+   *
+   * @param identity
+   *          the window's identity
+   * @param winCmd
+   *          the command to run on the window. The Lua variable describing the window will be called "c"
+   * @return shell command to run winCmd on the window
+   */
+  public static List<String> clientApiCommand(WindowIdentity identity, String winCmd) {
+    List<String> commands = setupCommands();
+
+    commands.add(String.format("echo \"for k,c in pairs(client.get()) do if %s then %s end end\" | %s",
+        AwesomeWindowIdentity.getConditionalPattern(identity),
+        winCmd, AWESOME_CLIENT_BIN));
+
+    return commands;
+  }
+
+  /**
    * Builds the lua script for cleaning up the awful rule.
    * 
    * @param identity

@@ -312,7 +312,7 @@ public class ManagedWindow implements ManagedResource {
         "Viewport geometry for viewport ",
         activity.getConfiguration().getPropertyString(CONFIG_KEY_VIEWPORT_TARGET, "<can't find>"),
         (geometry == null ? "<NULL>" : geometry.toString())
-    );
+    ));
 
     if (geometry == null)
       return null; // bypass when viewport geometry is not found
@@ -481,5 +481,27 @@ public class ManagedWindow implements ManagedResource {
   public void setVisible(boolean visible) {
     visibility = new WindowVisibility(visible);
     update();
+  }
+
+  /**
+   * Raises the window on top of other windows on the same layer
+   */
+  public void raise() {
+    List<String> command = AwesomeCommand.raiseWindow(identity);
+
+    activity.getLog().info(command.toString());
+
+    commandRunner.execute(command);
+  }
+
+  /**
+   * Lowers the window to be drawn under other windows on the same layer
+   */
+  public void lower() {
+    List<String> command = AwesomeCommand.lowerWindow(identity);
+
+    activity.getLog().info(command.toString());
+
+    commandRunner.execute(command);
   }
 }
