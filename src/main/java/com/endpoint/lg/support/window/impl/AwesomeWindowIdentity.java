@@ -67,17 +67,6 @@ public class AwesomeWindowIdentity {
   }
 
   /**
-   * Generates a lua conditional to match this window
-   * @param identity
-   *          the window's identity
-   * @return if condition for this window
-   */
-  public static String getConditionalPattern(WindowIdentity identity) {
-    return String.format("%s == '%s'", getRuleType(identity),
-        LuaRegex.escape(identity.getIdentifier()));
-  }
-
-  /**
    * Generates a script to remove all rules matching this window.
    * 
    * @param identity

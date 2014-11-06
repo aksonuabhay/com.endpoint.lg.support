@@ -161,8 +161,9 @@ public class AwesomeCommand {
   public static List<String> clientApiCommand(WindowIdentity identity, String winCmd) {
     List<String> commands = setupCommands();
 
-    commands.add(String.format("echo \"for k,c in pairs(client.get()) do if %s then %s end end\" | %s",
-        AwesomeWindowIdentity.getConditionalPattern(identity),
+    commands.add(String.format(
+        "echo \"for k,c in pairs(client.get()) do if awful.rules.match(c, %s) then %s end end\" | %s",
+        AwesomeWindowIdentity.getRulePattern(identity),
         winCmd, AWESOME_CLIENT_BIN));
 
     return commands;
