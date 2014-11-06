@@ -43,10 +43,11 @@ public class ConfigurationHelper {
 
     /*
      * Same as getConfigurationStrings, but it concatenates all the strings in
-     * the list into one resulting string
+     * the list into one resulting string. Parameters also include a delimeter,
+     * which if null, is interpreted as "".
      */
-    public static String getConfigurationConcat(Configuration config, String key) {
+    public static String getConfigurationConcat(Configuration config, String key, String delim) {
         List<String> l = getConfigurationStrings(config, key);
-        return StringUtils.join(l, " ");
+        return StringUtils.join(l, delim);
     }
 }
