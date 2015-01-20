@@ -230,6 +230,7 @@ public class ManagedWindow implements ManagedResource {
   private WindowGeometry manualGeometry;
   private WindowGeometry manualSize;
   private WindowVisibility visibility;
+  private String manualViewport;
 
   private NativeCommandRunner commandRunner;
 
@@ -258,12 +259,24 @@ public class ManagedWindow implements ManagedResource {
    */
   private WindowGeometry findViewportGeometry() {
     Configuration activityConfig = activity.getConfiguration();
+    String viewportName;
+    String[] viewports;
 
-    String viewportName = activityConfig.getPropertyString(CONFIG_KEY_VIEWPORT_TARGET, null);
+    if (manualViewport == null) {
+        viewportName = activityConfig.getPropertyString(CONFIG_KEY_VIEWPORT_TARGET, null);
 
-    if (viewportName == null) {
-      activity.getLog().debug("Viewport not configured");
-      return null; // bypass if viewport not configured
+        if (viewportName == null) {
+            activity.getLog().debug("Viewport not configured");
+            return null; // bypass if viewport not configured
+        }
+
+        viewports = viewportName.split(",", 2);
+        if (viewports.length > 1) {
+            viewportName = viewports[0];
+        }
+    }
+    else {
+        viewportName = manualViewport;
     }
 
     String widthKey = String.format(CONFIG_KEY_VIEWPORT_WIDTH, viewportName);
@@ -333,6 +346,13 @@ public class ManagedWindow implements ManagedResource {
     activity.getLog().debug("Final geometry: " + geometry.toString()); 
 
     return geometry;
+  }
+
+  /**
+   * Sets manual viewport name for this window
+   */
+  public void setViewportName(String vp) {
+    manualViewport = vp;
   }
 
   /**
