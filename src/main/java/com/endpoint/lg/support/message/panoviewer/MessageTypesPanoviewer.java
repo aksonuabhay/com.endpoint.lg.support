@@ -26,4 +26,9 @@ public class MessageTypesPanoviewer {
    * Message type for a POV change.
    */
   public static final String MESSAGE_TYPE_VIEWSYNC = "pano_viewsync";
+
+  /**
+   * Message type for a pano change.
+   */
+  public static final String MESSAGE_TYPE_CHANGEPANO = "pano_change";
 }
