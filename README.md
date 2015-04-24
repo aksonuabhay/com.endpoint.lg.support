@@ -1,5 +1,5 @@
-Support for Liquid Galaxy projects
-==================================
+Support for Liquid Galaxy Activities
+====================================
 
 Java package: com.endpoint.lg.support
 
@@ -20,3 +20,7 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
+
+Unique Build Information
+========================
+This activity is unique because it is a "library" type activity. It does not actually do anything itself, and it is not deployed an Interactive Spaces controller. Instead, once built, this activity should be copied into the "bootstrap" directory of your local controller, making the library available while building other activites which depend upon it.
