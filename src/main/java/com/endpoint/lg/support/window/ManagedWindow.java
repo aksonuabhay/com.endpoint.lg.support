@@ -21,7 +21,7 @@ import java.util.List;
 
 import interactivespaces.activity.impl.BaseActivity;
 import interactivespaces.configuration.Configuration;
-import interactivespaces.configuration.SystemConfiguration;
+// deprecated import interactivespaces.configuration.SystemConfiguration;
 import interactivespaces.util.process.NativeCommandRunner;
 import interactivespaces.util.resource.ManagedResource;
 
@@ -241,6 +241,9 @@ public class ManagedWindow implements ManagedResource {
    * @return true if the platform is supported
    */
   private boolean checkPlatformSupport() {
+    /* Unfortunately this relies upon deprecated IS stuff.
+       After chatting with Matt, we're only interested in Linux support.
+
     String platform =
         activity.getConfiguration().getPropertyString(SystemConfiguration.PLATFORM_OS);
 
@@ -251,6 +254,8 @@ public class ManagedWindow implements ManagedResource {
       return false;
 
     return false;
+    */
+    return true;
   }
 
   /**

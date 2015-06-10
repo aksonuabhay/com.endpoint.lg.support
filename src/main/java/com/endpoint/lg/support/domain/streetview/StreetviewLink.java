@@ -18,6 +18,7 @@
 package com.endpoint.lg.support.domain.streetview;
 
 import interactivespaces.util.data.json.JsonBuilder;
+import interactivespaces.util.data.json.StandardJsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
 
 import java.util.Map;
@@ -81,7 +82,7 @@ public class StreetviewLink {
    * @return json object with link data
    */
   public JsonBuilder getJsonBuilder() {
-    JsonBuilder json = new JsonBuilder();
+    JsonBuilder json = new StandardJsonBuilder();
     
     json.put(FIELD_PANO, pano);
     json.put(FIELD_HEADING, heading);

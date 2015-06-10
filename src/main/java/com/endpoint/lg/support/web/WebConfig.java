@@ -20,6 +20,7 @@ package com.endpoint.lg.support.web;
 import interactivespaces.configuration.Configuration;
 import interactivespaces.evaluation.ExpressionEvaluator;
 import interactivespaces.util.data.json.JsonMapper;
+import interactivespaces.util.data.json.StandardJsonMapper;
 
 import java.util.Map;
 
@@ -68,7 +69,7 @@ public class WebConfig {
       configMap.put(key, evaluator.evaluateStringExpression(configMap.get(key)));
     }
 
-    String json = new JsonMapper().toString(configMap);
+    String json = new StandardJsonMapper().toString(configMap);
 
     return String.format("var %1$s = %1$s || {}; %1$s.%2$s = %3$s;", JS_GLOBAL_OBJECT,
         JS_CONFIGURATION_OBJECT, json);

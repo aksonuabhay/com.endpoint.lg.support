@@ -18,6 +18,7 @@
 package com.endpoint.lg.support.message;
 
 import interactivespaces.util.data.json.JsonNavigator;
+import interactivespaces.util.data.json.StandardJsonNavigator;
 
 import com.google.common.collect.Maps;
 
@@ -102,7 +103,7 @@ public class WebsocketMessageHandlers {
    *          the message which came in
    */
   public void handleMessage(String connectionId, Object message) {
-    JsonNavigator m = new JsonNavigator(message);
+    JsonNavigator m = new StandardJsonNavigator(message);
 
     String messageType = m.getString(MessageWrapper.MESSAGE_FIELD_TYPE);
     if (messageType != null) {

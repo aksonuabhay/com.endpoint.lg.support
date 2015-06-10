@@ -18,6 +18,7 @@
 package com.endpoint.lg.support.domain.streetview;
 
 import interactivespaces.util.data.json.JsonNavigator;
+import interactivespaces.util.data.json.StandardJsonNavigator;
 
 /**
  * A collection of links to neighboring Street View panoramas.
@@ -62,7 +63,7 @@ public class StreetviewLinks {
     links = new StreetviewLink[numLinks];
 
     for (int i = 0; i < numLinks; i++) {
-      JsonNavigator item = new JsonNavigator(json.getItem(i));
+      JsonNavigator item = new StandardJsonNavigator(json.getItem(i));
       links[i] = new StreetviewLink(item);
     }
 

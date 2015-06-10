@@ -18,6 +18,7 @@
 package com.endpoint.lg.support.message;
 
 import interactivespaces.util.data.json.JsonBuilder;
+import interactivespaces.util.data.json.StandardJsonBuilder;
 
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class MessageWrapper {
    * @return a typed message
    */
   public static JsonBuilder newTypedMessage(String messageType) {
-    JsonBuilder message = new JsonBuilder();
+    JsonBuilder message = new StandardJsonBuilder();
 
     message.put(MESSAGE_FIELD_TYPE, messageType);
     message.newObject(MESSAGE_FIELD_DATA);
