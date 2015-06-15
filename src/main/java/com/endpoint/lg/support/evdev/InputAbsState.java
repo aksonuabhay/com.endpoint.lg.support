@@ -19,6 +19,7 @@ package com.endpoint.lg.support.evdev;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
+import interactivespaces.util.data.json.StandardJsonBuilder;
 
 /**
  * Model for the current EV_ABS state of an input device.
@@ -120,7 +121,7 @@ public class InputAbsState {
    * @return json representation of the axis state
    */
   public JsonBuilder getJsonBuilder() {
-    JsonBuilder json = new JsonBuilder();
+    JsonBuilder json = new StandardJsonBuilder();
 
     for (Integer i = 0; i < values.length; i++) {
       if (getValue(i) != 0) {

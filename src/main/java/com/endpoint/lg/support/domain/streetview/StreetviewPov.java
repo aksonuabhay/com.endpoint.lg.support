@@ -19,6 +19,7 @@ package com.endpoint.lg.support.domain.streetview;
 
 import interactivespaces.util.data.json.JsonNavigator;
 import interactivespaces.util.data.json.JsonBuilder;
+import interactivespaces.util.data.json.StandardJsonBuilder;
 
 import java.util.Map;
 
@@ -121,7 +122,7 @@ public class StreetviewPov {
    * @return json representation of the pov
    */
   public JsonBuilder getJsonBuilder() {
-    JsonBuilder json = new JsonBuilder();
+    JsonBuilder json = new StandardJsonBuilder();
 
     json.put(FIELD_HEADING, heading);
     json.put(FIELD_PITCH, pitch);
