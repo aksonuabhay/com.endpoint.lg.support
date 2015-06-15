@@ -21,7 +21,7 @@ import java.util.List;
 
 import interactivespaces.activity.impl.BaseActivity;
 import interactivespaces.configuration.Configuration;
-import interactivespaces.system.core.configuration.CoreConfiguration;
+import interactivespaces.system.core.configuration.CoreConfiguration; // Added by Abhay
 import interactivespaces.util.process.NativeCommandRunner;
 import interactivespaces.util.resource.ManagedResource;
 
@@ -242,7 +242,7 @@ public class ManagedWindow implements ManagedResource {
    */
   private boolean checkPlatformSupport() {
     String platform =
-        activity.getConfiguration().getPropertyString(CoreConfiguration.CONFIGURATION_INTERACTIVESPACES_PLATFORM_OS);
+        activity.getConfiguration().getPropertyString(CoreConfiguration.CONFIGURATION_INTERACTIVESPACES_PLATFORM_OS); // Changed by Abhay
 
     if (platform.equals(PLATFORM_LINUX))
       return true;

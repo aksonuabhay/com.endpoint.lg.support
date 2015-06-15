@@ -19,7 +19,7 @@ package com.endpoint.lg.support.evdev;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
-import interactivespaces.util.data.json.StandardJsonBuilder;
+import interactivespaces.util.data.json.StandardJsonBuilder; // Added by Abhay
 
 import java.util.Map;
 
@@ -72,7 +72,7 @@ public class InputKeyEvent extends InputEvent {
    * @return event data as a <code>JsonBuilder</code>
    */
   public static JsonBuilder serialize(InputEvent keyEvent) {
-    JsonBuilder json = new StandardJsonBuilder();
+    JsonBuilder json = new StandardJsonBuilder(); // Changed by Abhay
 
     json.put(InputEvent.FIELD_CODE, keyEvent.getCode());
     json.put(InputEvent.FIELD_VALUE, keyEvent.getValue());
@@ -86,7 +86,7 @@ public class InputKeyEvent extends InputEvent {
    * @return event data as <code>JsonBuilder</code>
    */
   public JsonBuilder getJsonBuilder() {
-    JsonBuilder json = new StandardJsonBuilder();
+    JsonBuilder json = new StandardJsonBuilder(); // Changed by Abhay
 
     json.put(InputEvent.FIELD_CODE, code);
     json.put(InputEvent.FIELD_VALUE, value);

@@ -18,7 +18,7 @@
 package com.endpoint.lg.support.message;
 
 import interactivespaces.util.data.json.JsonNavigator;
-import interactivespaces.util.data.json.StandardJsonNavigator;
+import interactivespaces.util.data.json.StandardJsonNavigator; // Added by Abhay
 
 import org.apache.commons.logging.Log;
 import com.google.common.collect.Maps;
@@ -90,7 +90,7 @@ public class RosMessageHandlers {
    *          the message which came in
    */
   public void handleMessage(String channel, Map<String, Object> message) {
-    JsonNavigator m = new StandardJsonNavigator(message);
+    JsonNavigator m = new StandardJsonNavigator(message); // Changed by Abhay
 
     RosMessageHandler handler = handlers.get(channel);
     if (handler != null) {

@@ -18,7 +18,7 @@
 package com.endpoint.lg.support.message;
 
 import interactivespaces.util.data.json.JsonBuilder;
-import interactivespaces.util.data.json.StandardJsonBuilder;
+import interactivespaces.util.data.json.StandardJsonBuilder; // Added by Abhay
 
 import java.util.Map;
 
@@ -71,7 +71,7 @@ public class MessageWrapper {
    * @return a typed message
    */
   public static JsonBuilder newTypedMessage(String messageType) {
-    JsonBuilder message = new StandardJsonBuilder();
+    JsonBuilder message = new StandardJsonBuilder(); // Changed by Abhay
 
     message.put(MESSAGE_FIELD_TYPE, messageType);
     message.newObject(MESSAGE_FIELD_DATA);

@@ -19,7 +19,7 @@ package com.endpoint.lg.support.domain.streetview;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
-import interactivespaces.util.data.json.StandardJsonBuilder;
+import interactivespaces.util.data.json.StandardJsonBuilder; // Added by Abhay
 
 import java.util.Map;
 
@@ -70,7 +70,7 @@ public class StreetviewPano {
    * @return json representation of the pano
    */
   public JsonBuilder getJsonBuilder() {
-    JsonBuilder json = new StandardJsonBuilder();
+    JsonBuilder json = new StandardJsonBuilder(); // Changed by Abhay
 
     json.put(FIELD_PANOID, panoid);
 

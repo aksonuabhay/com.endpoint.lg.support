@@ -19,7 +19,7 @@ package com.endpoint.lg.support.viewsync;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
-import interactivespaces.util.data.json.StandardJsonBuilder;
+import interactivespaces.util.data.json.StandardJsonBuilder; // Added by Abhay
 
 import java.util.Map;
 
@@ -209,7 +209,7 @@ public class EarthViewSyncState {
    */
   public JsonBuilder getJsonBuilder() {
     // serialize a JsonBuilder from an EarthViewSyncState instance
-    JsonBuilder json = new StandardJsonBuilder();
+    JsonBuilder json = new StandardJsonBuilder(); // Changed by Abhay
 
     json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_HEADING, orientation.getHeading());
     json.put(MessageFields.MESSAGE_FIELD_ORIENTATION_RANGE, orientation.getRange());

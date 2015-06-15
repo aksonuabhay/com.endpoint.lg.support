@@ -19,7 +19,7 @@ package com.endpoint.lg.support.evdev;
 
 import interactivespaces.util.data.json.JsonBuilder;
 import interactivespaces.util.data.json.JsonNavigator;
-import interactivespaces.util.data.json.StandardJsonBuilder;
+import interactivespaces.util.data.json.StandardJsonBuilder; // Added by Abhay
 
 import java.util.Map;
 import java.nio.ByteBuffer;
@@ -158,7 +158,7 @@ public class InputEvent {
    * @return event data as <code>JsonBuilder</code>
    */
   public JsonBuilder getJsonBuilder() {
-    JsonBuilder json = new StandardJsonBuilder();
+    JsonBuilder json = new StandardJsonBuilder(); // Changed by Abhay
 
     json.put(FIELD_TYPE, type);
     json.put(FIELD_CODE, code);
